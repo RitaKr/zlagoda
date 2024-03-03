@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - 8080:80
+    volumes:
+      - ./content/:/var/www/html
+    depends_on:
+      - database
+    environment:
+      RUN_NUMBER: 1
+      DB_HOST: database
+      DB_USER: admin
+      DB_PASSWORD: zlagoda_secret
+
+  database:
+    image: mysql:latest
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: zlagoda
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: zlagoda_secret
+      MYSQL_ROOT_PASSWORD: zlagoda_secret
+
+  phpmyadmin:
+    depends_on: 
+      - database
+    image: phpmyadmin/phpmyadmin
+    restart: unless-stopped
+    ports:
+      - 9090:80
+    environment:
+      PMA_HOST: database
+      MYSQL_ROOT_PASSWORD: zlagoda_secret
+      
