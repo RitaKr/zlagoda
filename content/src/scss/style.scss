@@ -1,17 +1,4 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-input:focus {
-    outline: none;
-}
-button, a {
-    cursor: pointer;
-}
 
-//simple styles to test if gulp is working
-h1, h2 {
-    color: green;
-    text-align: center;
-}
+@import "./base.scss";
+@import "./login.scss";
+

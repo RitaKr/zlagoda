@@ -1,0 +1,28 @@
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+   
+    .pass-alert, .username-alert {
+        display: none;
+    }
+    input {
+        outline: none;
+    }
+    &.invalid-pass {
+        #password {
+        outline: 2px red solid;
+        }
+        .pass-alert {
+            display: block;
+        }
+    }
+    &.invalid-username {
+        #username {
+        outline: 2px red solid;
+        }
+        .username-alert {
+            display: block;
+        }
+    }
+}

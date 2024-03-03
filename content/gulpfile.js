@@ -20,9 +20,9 @@ const util = require('gulp-util');
 
 // Styles
 gulp.task('sass', function () {
-    return gulp.src('src/scss/*', {
-        nodir: true
-    })
+    return gulp.src([
+        "src/scss/style.scss"
+    ])
         .pipe(sourcemaps.init())
         .pipe(sass({
             outputStyle: 'compressed',
