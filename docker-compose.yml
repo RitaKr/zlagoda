@@ -9,6 +9,7 @@ services:
     ports:
       - 8080:80
     volumes:
+      - ./.htaccess:/var/www/html/.htaccess
       - ./content/:/var/www/html
     depends_on:
       - database

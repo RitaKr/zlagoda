@@ -2,10 +2,10 @@
 FROM php:7.4-apache
 
 # Set the working directory in the container
-WORKDIR /var/www/html
+WORKDIR /var/www/html/content
 
 # Copy your PHP application code into the container
-COPY . .
+COPY ./content /var/www/html
 
 # Install PHP extensions and other dependencies
 RUN apt-get update && \
