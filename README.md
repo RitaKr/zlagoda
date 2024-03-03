@@ -15,9 +15,14 @@ if your database-1 and myphpadmin-1 containers are running, open localhost:9090 
 
 <h3><code>Please, note that Docker has to be launched and containers have to be running in order for links to work. But you can also stop the containers when you are not working with them, if you want to save some memory and CPU</code></h3>
 
-<h3>Also note that we use gulp to bundle styles and scripts!</h3>
-It means that we can create multiple styles and scripts and they all will bundle in one file. But you have to start gulp first:
-1. In terminal type: <code>cd content</code> to move to content folder
-2. Then type <code>npm install</code> to install all required dependencies, including gulp
-3. When the installation is over, type <code>npm start</code> and gulp will start watching files in src/scss and src/js and update build files on every change
+<h2>Also note that we use gulp to bundle styles and scripts</h2>
+<p>It means that we can create multiple styles and scripts and they all will bundle in one file. But you have to start gulp first:</p>
+<ol>
+  <li>In terminal type: <code>cd content</code> to move to content folder</li>
+  <li>Then type <code>npm install</code> to install all required dependencies, including gulp</li>
+  <li>When the installation is over, type <code>npm start</code> and gulp will start watching files in src/scss and src/js and update build files on every change</li>
+</ol>
+
+
+
 
