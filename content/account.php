@@ -1,7 +1,6 @@
-<?
-
-?>
 <?php include 'components/header.php'; ?>
+<?
+?>
 <main>
     <h1>My account</h1>
     <p>Logged in as:
@@ -10,7 +9,9 @@
     <h2>My information</h2>
     <?php
     $id = $_SESSION["user_id"];
-    $stmt = $conn->query("SELECT * FROM Employee WHERE id_employee = $id");
+    $stmt = $conn->prepare("SELECT * FROM Employee WHERE id_employee = :id");
+    $stmt->bindParam(':id', $id);
+    $stmt->execute(); 
     $empl = $stmt->fetch(PDO::FETCH_ASSOC);
     ?>
     <h3>Full name</h3>
