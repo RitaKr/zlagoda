@@ -1,17 +1,375 @@
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	font-family: "Didact Gothic", sans-serif;
 }
 input:focus {
-    outline: none;
+	outline: none;
 }
-button, a {
-    cursor: pointer;
+button,
+a,
+input[type="submit"] {
+	cursor: pointer;
+}
+a,
+.bi {
+	color: $linkcol;
+	text-decoration: none;
+	transition: all $transition;
+	&:hover {
+		color: $hovercol;
+	}
+}
+body {
+	background: $bg;
+	margin: 0;
+	padding: 0;
+	font-size: 16px;
+	position: relative;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+.mainheader {
+	background: $bg2;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px 20px;
+	width: 100%;
+
+	h2 {
+		color: $textcol;
+		font-size: 2rem;
+	}
+
+	.signin-switch {
+		border-radius: 30px;
+		display: flex;
+		background: $gray2;
+		a {
+			flex-grow: 1;
+			display: inline-block;
+			padding: 10px 15px;
+			border-radius: 30px;
+			color: white;
+			text-align: center;
+			font-size: 0.8rem;
+			&:first-child {
+				padding-right: 10px;
+			}
+			&:last-child {
+				padding-left: 10px;
+			}
+			&.active {
+				background: $gray;
+				padding: 10px 15px;
+			}
+		}
+	}
+	.menu-right {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+	.bi-search {
+		width: 1.5rem;
+		height: 1.5rem;
+		color: $textcol;
+	}
+	.my-account {
+		background: $bg;
+		height: 40px;
+		width: 40px;
+		border-radius: 100%;
+	}
 }
 
-//simple styles to test if gulp is working
-h1, h2 {
-    color: green;
-    text-align: center;
+.mainmenu {
+	ul {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		list-style: none;
+		gap: 20px;
+		font-size: 1.2rem;
+	}
+	a {
+		font-weight: 500;
+	}
+}
+.logo {
+	display: flex;
+	flex-wrap: nowrap;
+	h2 {
+		font-weight: 300;
+		font-size: 2rem;
+	}
+}
+.footer {
+	background: $bg2;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	min-height: 150px;
+	width: 100%;
+	justify-content: space-between;
+	align-items: center;
+
+	.footer-links {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+	}
+}
+
+.btn-primary {
+	background: $primary;
+	color: white;
+	padding: 8px 25px;
+	border-radius: 20px;
+	font-size: 1rem;
+	transition: all $transition;
+	border: 2px solid $primary;
+
+	&:not(:disabled):hover {
+		background: $primary-hover;
+		border: 2px solid $primary-hover;
+	}
+
+	&:disabled {
+		opacity: 0.4;
+		cursor: not-allowed;
+	}
+}
+
+.main-wrap {
+	padding: 40px;
+	position: relative;
+	flex-grow: 1;
+	h1 {
+		text-align: center;
+		margin: 0.5rem 0 1rem 0;
+		font-size: 2.5rem;
+	}
+}
+
+.grid-menu {
+	display: grid;
+	grid-template-columns: repeat(3, 180px);
+	grid-template-rows: repeat(2, 180px);
+	justify-content: space-around;
+	max-width: 780px;
+	margin: 0 auto;
+	gap: 40px;
+
+	a {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 20px;
+		background: white;
+		border-radius: 100%;
+		text-align: center;
+		color: $textcol;
+		transition: all 0.4s ease;
+		font-size: 1.2rem;
+
+		&:hover {
+			background: $gray2;
+			color: white;
+			transform: scale(1.05);
+			box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
+
+			.bi {
+				color: white;
+			}
+		}
+		.bi {
+			width: 50%;
+			margin-bottom: 10px;
+		}
+	}
+}
+.products-menu {
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	max-width: 780px;
+	max-width: 780px;
+	margin: 0 auto;
+	gap: 10px;
+	a {
+		background: $gray2;
+		color: white;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.4rem;
+		min-height: 320px;
+		width: 100%;
+		max-width: 250px;
+		transition: all 0.4s ease;
+
+		&:hover {
+			background: $gray;
+			transform: scale(1.04);
+			box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
+		}
+		.bi {
+			color: white;
+			width: 50%;
+			margin-bottom: 10px;
+		}
+	}
+}
+.control-panel {
+	display: flex;
+	justify-content: flex-start;
+
+	margin: 20px 0;
+	form {
+		padding: 10px 20px;
+        flex-shrink: 0;
+		background: $gray;
+		label {
+			display: flex;
+			align-items: center;
+			gap: 20px;
+		}
+		select {
+			background: $bg;
+			padding: 4px 8px;
+			border-radius: 5px;
+			border: none;
+		}
+
+		&.search-form {
+			display: flex;
+			align-items: center;
+			padding: 0;
+			width: 400px;
+			background: white;
+            flex-shrink: 1;
+			input {
+				height: 100%;
+				width: 100%;
+				border: none;
+			}
+			button {
+				background: none;
+				border: none;
+				outline: none;
+				padding: 5px 10px;
+				.bi {
+					width: 20px;
+					height: 20px;
+				}
+			}
+		}
+		&.category-form {
+			background: $gray2;
+		}
+		&.prom-form {
+			background: darken($gray2, 10%);
+		}
+	}
+}
+
+.content-table {
+	border: 2px solid $gray2;
+	border-collapse: collapse;
+	background: darken($gray2, 40%);
+
+	th {
+		color: white;
+		text-align: center;
+
+		&:nth-child(1) {
+			background: $gray;
+		}
+		&:nth-child(2) {
+			background: $gray2;
+		}
+		&:nth-child(3) {
+			background: darken($gray2, 10%);
+		}
+		&:nth-child(4) {
+			background: darken($gray2, 20%);
+		}
+		&:nth-child(5) {
+			background: darken($gray2, 30%);
+		}
+	}
+	th,
+	td {
+		padding: 10px;
+	}
+	td {
+		border-left: 2px solid $gray2;
+		border-right: 2px solid $gray2;
+		background: white;
+		transition: all $transition;
+	}
+	tr:nth-child(2n) td {
+		background: lighten($bg, 5%);
+	}
+	tr:has(td .table-btn.edit:hover) td {
+		background: $yellow;
+	}
+	tr:has(td .table-btn.delete:hover) td {
+		background: $invalid;
+	}
+}
+
+.table-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 10px;
+	border: none;
+	border-radius: 100%;
+	box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+	transition: all $transition;
+	background: none;
+	.bi {
+		color: white;
+	}
+	&:hover {
+		//box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+		box-shadow: none;
+		
+	}
+	&.edit {
+background: $yellow;
+		&:hover {
+			//background: darken($yellow, 10%);
+			 background: white;
+			// .bi {
+			// 	color: white;
+			// }
+			.bi {
+				color: $yellow;
+			}
+		}
+	}
+	&.delete {
+		background: $invalid;
+
+		&:hover {
+			//background: $invalid;
+			//background: darken($invalid, 10%);
+            background: white;
+			// .bi {
+			// 	color: white;
+			// }
+			.bi {
+				color: $invalid;
+			}
+		}
+	}
 }

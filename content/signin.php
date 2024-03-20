@@ -2,36 +2,41 @@
 
 ?>
 <?php include 'components/header.php'; ?>
-<main>
-    <section class="login-wrapper">
-        <h1>Sign in</h1>
 
+    <section class="login-wrap">
+        <div class="login-container">
         <form action="<?ROOT_PATH?>/signin-handle.php" method="GET" class="login-form <?php echo isset($_SESSION['wrong_pass']) ? 'invalid-pass':''?>" id="signin-form">
-            <div class="alert username-alert">
-                <p></p>
-            </div>
-            <div class="alert pass-alert">
-                <p>Incorrect password!</p>
-            </div>
+        <h1>Sign in</h1>
+            
+            
 
             
             <label for="username">
                 <span>Username</span>
                 <input type="text" name="username" id="username" placeholder="Enter your username">
+                <div class="alert username-alert">
+                <p></p>
+            </div>
             </label>
 
             <label for="password">
                 <span>Password</span>
                 <input type="password" name="password" id="password" placeholder="Enter your password">
+                <div class="alert pass-alert">
+                <p>Incorrect password!</p>
+            </div>
                 
             </label>
-            <input type="submit" value="Sign in" id="signin-btn" disabled>
+            <input type="submit" value="Sign in" id="signin-btn" class="btn-primary" disabled>
 
         </form>
-        <p><a href="<?ROOT_PATH?>/signup.php">Sign up</a></p>
+        <p class="other-signin">Don't have an account yet? <a href="<?ROOT_PATH?>/signup.php">Sign up</a></p>
+        </div>
+
+        
     </section>
 
-</main>
+
 <script>
     //console.log("hi")
     const passInput = document.getElementById("password");

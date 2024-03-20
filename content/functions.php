@@ -104,3 +104,7 @@ function get_full_name($employee)
 {
     return $employee['empl_surname'] . ' ' . $employee['empl_name'] . ($employee['empl_patronymic'] != null ? (' ' . $employee['empl_patronymic']) : '');
 }
+
+function home_url($page) {
+    return ROOT_PATH .'/'. $page;
+}

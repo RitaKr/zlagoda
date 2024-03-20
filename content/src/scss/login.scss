@@ -1,28 +1,85 @@
-
-.login-form {
+.login-wrap {
     display: flex;
-    flex-direction: column;
-   
-    .pass-alert, .username-alert {
-        display: none;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    flex-grow: 1;
+}
+.login-container {
+	max-width: 20rem;
+	width: 100%;
+	background: $bg2;
+	border-radius: 8px;
+	
+
+	.other-signin {
+		padding: 10px 30px;
+		text-align: center;
+		font-size: 0.8rem;
+	}
+	a {
+		color: white;
+	}
+	.alert {
+		color: $invalid;
+		font-size: 0.8rem;
+		font-weight: 400;
+	}
+    .notice {
+        font-size: 0.8rem;
+		font-weight: 400;
+        width: 100%;
+        margin-top: 4px;
     }
-    input {
-        outline: none;
-    }
-    &.invalid-pass {
-        #password {
-        outline: 2px red solid;
-        }
-        .pass-alert {
-            display: block;
-        }
-    }
-    &.invalid-username {
-        #username {
-        outline: 2px red solid;
-        }
-        .username-alert {
-            display: block;
-        }
-    }
+}
+.login-form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 10px 30px;
+	gap: 1.5rem;
+	h1 {
+		font-size: 1.625rem;
+		text-align: left;
+		align-self: flex-start;
+		margin-bottom: 0;
+	}
+	.pass-alert,
+	.username-alert {
+		display: none;
+	}
+	input:not([type="submit"]), select {
+		outline: none;
+		width: 100%;
+		padding: 10px;
+		border-radius: 4px;
+		border: 2px solid transparent;
+		background: $bg;
+		margin-top: 4px;
+	}
+
+	label {
+		width: 100%;
+		font-weight: 600;
+		font-size: 1rem;
+	}
+	&.invalid-pass {
+		#password {
+			outline: 2px $invalid solid;
+			//background: $invalid-bg;
+		}
+		.pass-alert {
+			display: block;
+		}
+	}
+	&.invalid-username {
+		#username {
+			outline: 2px $invalid solid;
+			//background: $invalid-bg;
+		}
+		.username-alert {
+			display: block;
+		}
+	}
 }

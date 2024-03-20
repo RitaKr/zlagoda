@@ -2,7 +2,7 @@
 
 ?>
 <?php include 'components/header.php'; ?>
-<main>
+<main class="main-wrap">
 <h1>All product categories</h1> 
 </main>
 

@@ -1,7 +1,7 @@
 <?php include 'components/header.php'; ?>
 <?
 ?>
-<main>
+<main class="main-wrap">
     <h1>My account</h1>
     <p>Logged in as:
         <?php echo $_SESSION["user_login"] ?> (<?php echo $_SESSION["role"] ?>)
@@ -33,7 +33,7 @@
     <p><?php echo $empl["city"]?>, <?php echo $empl["street"]?>, <?php echo $empl["zip_code"]?></p>
 
     <form action="signout.php" method="post">
-        <button type="submit" name="signout">Sign Out</button>
+        <button type="submit" name="signout" class="btn-primary">Sign Out</button>
     </form>
 </main>
 
