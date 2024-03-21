@@ -83,7 +83,7 @@
         </p>
         </label>
         
-        <input type="submit" value="Sign up" id="signup-btn" class="btn-primary" disabled>
+        <button type="submit" id="signup-btn" class="btn-primary" disabled>Sign up</button>
 
     </form>
     <p class="other-signin">Already have an account? <a href="<? ROOT_PATH ?>/signup.php">Sign up</a></p>

@@ -27,7 +27,7 @@
             </div>
                 
             </label>
-            <input type="submit" value="Sign in" id="signin-btn" class="btn-primary" disabled>
+            <button type="submit" id="signin-btn" class="btn-primary" disabled>Sign in</button>
 
         </form>
         <p class="other-signin">Don't have an account yet? <a href="<?ROOT_PATH?>/signup.php">Sign up</a></p>

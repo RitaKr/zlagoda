@@ -33,6 +33,17 @@
         margin-top: 4px;
     }
 }
+input, select {
+    outline: none;
+    
+    padding: 10px;
+    border-radius: 4px;
+    border: 2px solid transparent;
+    
+}
+label strong {
+    color: $invalid;
+}
 .login-form {
 	display: flex;
 	flex-direction: column;
@@ -58,7 +69,11 @@
 		background: $bg;
 		margin-top: 4px;
 	}
-
+    input, select {
+        width: 100%;
+        background: $bg;
+        margin-top: 4px;
+    }
 	label {
 		width: 100%;
 		font-weight: 600;

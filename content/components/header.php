@@ -1,26 +1,21 @@
 <?php
 define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT']);
-include ROOT_PATH . '/functions.php';
-include ROOT_PATH . '/db-connection.php';
-
+include_once ROOT_PATH . '/functions.php';
+include_once ROOT_PATH . '/db-connection.php';
 // Check if the requested file exists
-if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $_SERVER['REQUEST_URI'])) {
+$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
     // Redirect to the 404.php page
     header("Location: /404.php");
     exit;
 }
-
 if ($_SERVER['PHP_SELF'] != '/signin.php' && $_SERVER['PHP_SELF'] != '/signup.php' && !is_logged_in()) {
     header("Location: /signin.php");
     exit;
 }
 ?>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,6 +28,7 @@ if ($_SERVER['PHP_SELF'] != '/signin.php' && $_SERVER['PHP_SELF'] != '/signup.ph
         href="https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=Quicksand:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <!-- Your CSS files, meta tags, etc. -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body>

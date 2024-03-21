@@ -9,8 +9,10 @@ input:focus {
 }
 button,
 a,
-input[type="submit"] {
+input[type="submit"],
+.bi {
 	cursor: pointer;
+	transition: all $transition;
 }
 a,
 .bi {
@@ -229,16 +231,23 @@ body {
 }
 .control-panel {
 	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	margin: 20px 0;
+}
+.control-forms {
+	display: flex;
 	justify-content: flex-start;
-
 	margin: 20px 0;
 	form {
-		padding: 10px 20px;
-        flex-shrink: 0;
-		background: $gray;
+		display: flex;
+		justify-content: flex-start;
 		label {
 			display: flex;
 			align-items: center;
+			padding: 10px 20px;
+			flex-shrink: 0;
+			background: $gray;
 			gap: 20px;
 		}
 		select {
@@ -252,9 +261,9 @@ body {
 			display: flex;
 			align-items: center;
 			padding: 0;
-			width: 400px;
+			width: 360px;
 			background: white;
-            flex-shrink: 1;
+			flex-shrink: 1;
 			input {
 				height: 100%;
 				width: 100%;
@@ -271,10 +280,10 @@ body {
 				}
 			}
 		}
-		&.category-form {
+		.category-form {
 			background: $gray2;
 		}
-		&.prom-form {
+		.prom-form {
 			background: darken($gray2, 10%);
 		}
 	}
@@ -342,13 +351,12 @@ body {
 	&:hover {
 		//box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
 		box-shadow: none;
-		
 	}
 	&.edit {
-background: $yellow;
+		background: $yellow;
 		&:hover {
 			//background: darken($yellow, 10%);
-			 background: white;
+			background: white;
 			// .bi {
 			// 	color: white;
 			// }
@@ -363,13 +371,128 @@ background: $yellow;
 		&:hover {
 			//background: $invalid;
 			//background: darken($invalid, 10%);
-            background: white;
+			background: white;
 			// .bi {
 			// 	color: white;
 			// }
 			.bi {
 				color: $invalid;
 			}
+		}
+	}
+}
+.btn-control {
+	padding: 10px 30px;
+	border-radius: 8px;
+	text-align: center;
+	background: black;
+	color: white;
+	border: none;
+	font-size: 1rem;
+
+	&:hover {
+		background: $gray2;
+	}
+}
+
+.add-form-container {
+	width: 600px;
+	max-width: 100%;
+	&[open] {
+		.add-form-opener {
+			background: $gray2;
+			color: white;
+			.bi {
+				transform: rotate(90deg);
+			}
+		}
+	}
+	.add-form-opener {
+		display: flex;
+
+		align-items: center;
+		padding: 10px;
+		gap: 10px;
+		color: $gray2;
+		border-radius: 8px 8px 0 0;
+		border-bottom: 4px solid $gray2;
+
+		cursor: pointer;
+		transition: all $transition;
+		.bi {
+			color: inherit;
+		}
+		&:hover {
+			background: $gray2;
+			color: white;
+			.bi {
+				color: inherit;
+				transform: rotate(90deg);
+			}
+		}
+	}
+
+	form {
+		padding: 20px;
+		background: $bg2;
+		border-radius: 0 0 8px 8px;
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+		width: 100%;
+		fieldset {
+			border: none;
+			display: flex;
+			align-items: stretch;
+			gap: 20px;
+		}
+		label {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
+			height: 100%;
+			flex-grow: 1;
+			font-weight: 600;
+		}
+		input,
+		select,
+		textarea {
+			padding: 10px;
+			margin-top: 5px;
+			resize: none;
+		}
+	}
+}
+.banner {
+	padding: 15px;
+	border-radius: 8px;
+	font-weight: 700;
+	position: relative;
+	width: 100%;
+	max-width: 500px;
+	margin: 20px 0;
+
+	&.alert-success {
+		background: #ceeed6;
+		color: #155724;
+		border: 1px solid #a8e3b6;
+	}
+	&.alert-danger {
+		background: #ffd1d5;
+		color: #721c24;
+		border: 1px solid #f6b1b8;
+	}
+
+	.close {
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		cursor: pointer;
+		color: $gray;
+		background: none;
+		border: none;
+		&:hover {
+			color: $gray2;
 		}
 	}
 }
