@@ -109,4 +109,12 @@ function home_url($page) {
     return ROOT_PATH .'/'. $page;
 }
 
+function get_new_UPC(){
+    include ROOT_PATH . '/db-connection.php';
+    $stmt = $conn->query("SELECT MAX(CAST(UPC AS UNSIGNED)) as max FROM Store_Product");
+    $max = $stmt->fetch(PDO::FETCH_ASSOC)["max"];
+    //print_r($max);
+    return intval($max) + 1;
+}
+
 

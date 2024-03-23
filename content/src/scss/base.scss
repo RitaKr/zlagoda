@@ -409,7 +409,7 @@ body {
 }
 
 .add-form-container {
-	width: 600px;
+	min-width: 600px;
 	max-width: 100%;
 	&[open] {
 		.add-form-opener {
@@ -466,6 +466,12 @@ body {
 			height: 100%;
 			flex-grow: 1;
 			font-weight: 600;
+
+			&.inline {
+				flex-direction: row;
+				justify-content: flex-start;
+				gap: 10px;
+			}
 		}
 		input,
 		select,

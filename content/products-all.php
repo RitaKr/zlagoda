@@ -1,10 +1,13 @@
 <?php
 include_once 'functions.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    //storing filters data in the session, so that it wasn't reset after submission of other forms
-    $_SESSION['filtersData'] = $_POST;
+    // Storing filters data in the session, so that it wasn't reset after submission of other forms
+    $currentPage = basename($_SERVER['SCRIPT_NAME']);
+    $_SESSION['filtersData'][$currentPage] = $_POST;
 }
-$filters = $_SESSION['filtersData'];
+
+$currentPage = basename($_SERVER['SCRIPT_NAME']);
+$filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersData'][$currentPage] : array();
 ?>
 <?php include 'components/header.php'; ?>
 <main class="main-wrap">
@@ -92,10 +95,10 @@ $filters = $_SESSION['filtersData'];
                                 required>
                         </label>
                         <label for="cat">
-                            <span>Category</span>
+                            <span>Category <strong>*</strong></span>
                             <select name="category_number" id="cat">
                                 <?php
-                                $stmt = $conn->query("SELECT * FROM Category");
+                                $stmt = $conn->query("SELECT * FROM Category ORDER BY category_name");
                                 $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                 foreach ($categories as $category):
@@ -175,26 +178,33 @@ $filters = $_SESSION['filtersData'];
                         $cat_name = $stmt->fetch(PDO::FETCH_ASSOC)['category_name'];
 
                         $stmt = $conn->query("SELECT category_number AS id, category_name AS item_name FROM Category");
-                        $cat_array = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC), JSON_UNESCAPED_UNICODE);
+                        
+                        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        foreach ($result as $key => $row) {
+                            foreach ($row as $field => $value) {
+                                $result[$key][$field] = str_replace("'", "&#39;", $value);
+                            }
+                        }
+                        $cat_array = json_encode($result, JSON_UNESCAPED_UNICODE);
                         //echo $cat_array.'<br>';
                         ?>
 
                         <tr>
                             <td>
-                                <?php echo $product['id_product'] ?>
+                                <?= $product['id_product'] ?>
                             </td>
                             <td data-key="product_name" data-nn="true">
-                                <?php echo $product['product_name'] ?>
+                                <?= $product['product_name'] ?>
                             </td>
 
                             <td data-key="category_number" data-val="<?= $cat_num ?>" data-fk='<?= $cat_array ?>'>
-                                <?php echo $cat_name; ?>
+                                <?= $cat_name; ?>
                             </td>
                             <td data-key="producer" data-nn="true">
-                                <?php echo $product['producer'] ?>
+                                <?= $product['producer'] ?>
                             </td>
                             <td data-key="characteristics" data-nn="true">
-                                <?php echo $product['characteristics'] ?>
+                                <?= $product['characteristics'] ?>
                             </td>
                             <?php if (has_role('manager')): ?>
                                 <td>

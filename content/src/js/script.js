@@ -2,14 +2,18 @@ $(document).ready(function () {
 	//handles delete of item from database on delete button click. it sends request to actions.php where the sql query is executed, gets a response back and alerts the status of the action
 	//note that in order for sql query to be executed each button must have data attributes with name of the table (data-table), name of PK (data-key), and id of item to be deleted (data-id)
 	$(".delete").click(function (e) {
-        e.preventDefault();
+		e.preventDefault();
 		//getting the data for the query from button data-attributes
 		const id = $(this).attr("meta-id");
 		const table = $(this).attr("meta-table");
 		const key = $(this).attr("meta-key");
 
 		//confirmation dialog before deleting
-		if (confirm("Are you sure you want to delete this "+table.toLowerCase()+"?")) {
+		if (
+			confirm(
+				"Are you sure you want to delete this " + table.toLowerCase() + "?"
+			)
+		) {
 			//sending request to actions.php with action delete
 			$.ajax({
 				url: "../../actions.php?action=delete",
@@ -41,7 +45,7 @@ $(document).ready(function () {
 					//console.log($(this).val().trim())
 					if ($(this).val().trim() == "") {
 						empty = true;
-					} 
+					}
 				});
 
 			if (empty) {
@@ -65,65 +69,110 @@ $(document).ready(function () {
 		e.preventDefault();
 	});
 
-	
-
 	$(".edit").click(function (e) {
 		e.preventDefault();
-        
+
 		const row = $(this).closest("tr");
-        row.append(`<input type="hidden" name="id" value="${$(this).attr("meta-id")}">`);
-        row.append(`<input type="hidden" name="key" value="${$(this).attr("meta-key")}">`);
-        row.append(`<input type="hidden" name="table" value="${$(this).attr("meta-table")}">`);
+		row.append(
+			`<input type="hidden" name="id" value="${$(this).attr("meta-id")}">`
+		);
+		row.append(
+			`<input type="hidden" name="key" value="${$(this).attr("meta-key")}">`
+		);
+		row.append(
+			`<input type="hidden" name="table" value="${$(this).attr("meta-table")}">`
+		);
 		const deleteBtn = row.find(".delete");
 		row.toggleClass("editing", true);
-		const cells = row.find("td:not(:first-child)");
-		cells.splice(-2);
+		const cells = row.find("td[data-key]");
+		//console.log(cells);
+		//cells.splice(-2);
 		const editButton = $(this);
 		const cancelBtn =
 			$(`<button class="table-btn cancel" title="Withdraw changes">
             <svg xmlns="http://www.w3.org/2000/svg"  fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
             <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
           </svg></button>`);
-	
-          const editButtonInner = editButton.html();
-          const originalText = [];
 
+		const editButtonInner = editButton.html();
+		const originalText = [];
 
 		if (editButton.attr("aria-roledescription") == "edit") {
 			// Change the text to an input field
 			cells.each(function () {
-				const key = this.dataset["key"];
+				const keyName = this.dataset["key"];
 				const fk = this.dataset["fk"];
 				const fkVal = this.dataset["val"];
 				const nn = this.dataset["nn"];
+				const options = this.dataset["options"];
+                const type = this.dataset["type"];
+                const validate = this.dataset["validate"];
 				const text = this.innerText;
 				originalText.push(text); //preserving original values for the case of canceling
-				
-				const td = $(this);
 
-                //in case of FK we use select
+				const td = $(this);
+                const infoCells = td.siblings('td[data-info]');
+				//in case of FK we use select
 				if (fk) {
-					fkArray = JSON.parse(fk);
+                    //console.log(fk);
+					const fkArray = JSON.parse(fk);
+                    let infoValues = fkArray.reduce((acc, pr)=>{
+                        const {id, item_name, ...info} = pr;
+                        acc[id] = Object.values(info);
+                        return acc;
+                    }, {});
+                    console.log("infoValues:",infoValues);
 					td.html(
-						`<select name="${key}">
-                        ${fkArray
-							.map((fk) => {
-								return `<option value="${fk.id}" ${fk.id == fkVal ? "selected" : ""}>${fk.item_name}</option>`;
-							})
-							.join("")
-                        }</select>`
+						`<select name="${keyName}">
+                        ${fkArray.map((fk) => {
+                            const {id, item_name, ...info} = fk;
+                            //console.log(info);
+                            
+							return `<option value="${id}" ${id == fkVal ? "selected" : ""}>${item_name}</option>`;}).join("")}</select>`
 					);
-				} else { //otherwise text input
+                    const select = td.children("select");
+                    select.on("change", function () {
+                        const selected = $(this).find("option:selected");
+                        const id = selected.val();
+                                                
+                        infoValues[id].forEach((info, i)=>{
+                            infoCells[i].innerText = info;
+                        })
+                        
+                    });
+                    //console.log(infoValues);
+				} else if (options) {
+					let optionsArray = JSON.parse(options);
+                    console.log(optionsArray);
+                    if (Array.isArray(optionsArray)) {
+                        console.log("is array");
+                        optionsArray = optionsArray.map((option, i) => {
+                            return { [i]: option };
+                        });
+                    }
+                    console.log(optionsArray);
+					//keys = Object.keys(optionsArray);
+					td.html(
+                        `<select name="${keyName}">
+                        ${optionsArray.map((option) => {
+                            const key = Object.keys(option)[0];
+                            const val = Object.values(option)[0];
+                            return `<option value="${key}" ${val == text ? "selected" : ""}>${val}</option>`;
+                        }).join("")}
+                        </select>`);
+                    
+				} else {
+					//otherwise text input
 					td.html(
 						'<input type="text" name="' +
-							key +
+							keyName +
 							'" value="' +
 							text +
 							'" ' +
 							(nn ? "required " : "") +
 							">"
 					);
-					
+
 					const input = td.children("input");
 					input.on("keyup change input", function () {
 						if (input.val().trim() == "") {
@@ -131,11 +180,30 @@ $(document).ready(function () {
 						} else {
 							$(this).toggleClass("invalid", false);
 						}
+                        if (type=="double") {
+                            console.log(input.val(), parseFloat(input.val()), input.val()==parseFloat(input.val()));
+                            if (isNaN(parseFloat(input.val())) || parseFloat(input.val()) < 0 || input.val()!=parseFloat(input.val())) {
+                                $(this).toggleClass("invalid", true);
+                            } else {
+                                $(this).toggleClass("invalid", false);
+                            }
+                        }
+                        if (type=="int") {
+                            console.log(input.val(), parseInt(input.val()), input.val()==parseInt(input.val()));
+                            if (isNaN(parseInt(input.val())) || parseInt(input.val()) < 0 || input.val()!=parseInt(input.val())) {
+                                $(this).toggleClass("invalid", true);
+                            } else {
+                                $(this).toggleClass("invalid", false);
+                            }
+                        }
+                        //console.log(parseFloat(input.val()));
 						//console.log("empty:", empty);
 
 						editButton.prop("disabled", row.has("td .invalid").length > 0);
 					});
 				}
+
+                
 			});
 
 			// Change the edit button to a submit button
@@ -145,33 +213,32 @@ $(document).ready(function () {
 			editButton.attr("aria-roledescription", "submit-edit");
 			editButton.attr("title", "Apply changes");
 
-            //handle canceling
+			//handle canceling
 			cancelBtn.click(function (e) {
 				e.preventDefault();
-				
+
 				if (confirm("Are you sure you want to withdraw changes?")) {
-					
-                    location.reload();
+					location.reload();
 				}
 			});
 			deleteBtn.replaceWith(cancelBtn);
 			console.log(deleteBtn);
 		} else {
-            if (confirm("Are you sure you want to apply this changes?")) {
-                var form = row.parents().find("form#edit-form")[0];
+			if (confirm("Are you sure you want to apply this changes?")) {
+				var form = row.parents().find("form#edit-form")[0];
 				form.submit();
 			}
 		}
 	});
 
-    $('.print').click(function() {
-        var clone = $('.content-table').clone(); // clone the table
-        clone.find('td:has(button)').remove(); // remove td's that contain a button
-        var printContents = $('<div>').append(clone).html(); // get the outer html of the cloned table
-        var originalContents = document.body.innerHTML;
-        
-        
-        document.body.innerHTML = `<style type="text/css" media="print">
+	$(".print").click(function () {
+		var clone = $(".content-table").clone(); // clone the table
+		clone.find("td:has(button)").remove(); // remove td's that contain a button
+		var printContents = $("<div>").append(clone).html(); // get the outer html of the cloned table
+		var originalContents = document.body.innerHTML;
+
+		document.body.innerHTML =
+			`<style type="text/css" media="print">
         @media print {
             
             @page {
@@ -180,13 +247,13 @@ $(document).ready(function () {
             }
             body {
                 
-                padding-bottom: 72px ;
+                padding-bottom: 1cm ;
             }
         }
-  </style>`+printContents;
+  </style>` + printContents;
 
-        window.print();
-        document.body.innerHTML = originalContents;
-        location.reload();
-    });
+		window.print();
+		document.body.innerHTML = originalContents;
+		location.reload();
+	});
 });
