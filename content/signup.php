@@ -86,7 +86,7 @@
         <button type="submit" id="signup-btn" class="btn-primary" disabled>Sign up</button>
 
     </form>
-    <p class="other-signin">Already have an account? <a href="<? ROOT_PATH ?>/signup.php">Sign up</a></p>
+    <p class="other-signin">Already have an account? <a href="<? ROOT_PATH ?>/signin.php">Sign in</a></p>
 
 </div>
 </section>

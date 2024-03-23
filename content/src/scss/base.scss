@@ -141,10 +141,6 @@ body {
 		border: 2px solid $primary-hover;
 	}
 
-	&:disabled {
-		opacity: 0.4;
-		cursor: not-allowed;
-	}
 }
 
 .main-wrap {
@@ -235,57 +231,53 @@ body {
 	align-items: flex-start;
 	margin: 20px 0;
 }
-.control-forms {
+.filters-form {
 	display: flex;
 	justify-content: flex-start;
-	margin: 20px 0;
-	form {
+	label {
 		display: flex;
-		justify-content: flex-start;
-		label {
-			display: flex;
-			align-items: center;
-			padding: 10px 20px;
-			flex-shrink: 0;
-			background: $gray;
-			gap: 20px;
-		}
-		select {
-			background: $bg;
-			padding: 4px 8px;
-			border-radius: 5px;
+		align-items: center;
+		padding: 10px 20px;
+		flex-shrink: 0;
+		background: $gray;
+		gap: 20px;
+	}
+	select {
+		background: $bg;
+		padding: 4px 8px;
+		border-radius: 5px;
+		border: none;
+	}
+
+	.search-fieldset {
+		display: flex;
+		align-items: center;
+		padding: 0;
+		width: 360px;
+		background: white;
+		border: none;
+		flex-shrink: 1;
+		input {
+			height: 100%;
+			width: 100%;
 			border: none;
 		}
-
-		&.search-form {
-			display: flex;
-			align-items: center;
-			padding: 0;
-			width: 360px;
-			background: white;
-			flex-shrink: 1;
-			input {
-				height: 100%;
-				width: 100%;
-				border: none;
-			}
-			button {
-				background: none;
-				border: none;
-				outline: none;
-				padding: 5px 10px;
-				.bi {
-					width: 20px;
-					height: 20px;
-				}
+		button {
+			background: none;
+			border: none;
+			outline: none;
+			padding: 5px 10px;
+			.bi {
+				width: 20px;
+				height: 20px;
 			}
 		}
-		.category-form {
-			background: $gray2;
-		}
-		.prom-form {
-			background: darken($gray2, 10%);
-		}
+	}
+	.category-filter {
+		background: $gray2;
+	}
+	.promo-filter {
+		background: darken($gray2, 10%);
 	}
 }
 
@@ -293,7 +285,7 @@ body {
 	border: 2px solid $gray2;
 	border-collapse: collapse;
 	background: darken($gray2, 40%);
-
+	
 	th {
 		color: white;
 		text-align: center;
@@ -329,6 +321,15 @@ body {
 	}
 	tr:has(td .table-btn.edit:hover) td {
 		background: $yellow;
+		
+	}
+	tr.editing td {
+		background: lighten($yellow, 40%);
+		input, select {
+			width: 100%;
+			border: 2px solid lighten($yellow, 30%);
+			//background: lighten($yellow, 40%);
+		}
 	}
 	tr:has(td .table-btn.delete:hover) td {
 		background: $invalid;
@@ -339,27 +340,37 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding: 10px;
+	padding: 5px;
+	width: 40px;
+	height: 40px;
 	border: none;
 	border-radius: 100%;
 	box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
 	transition: all $transition;
 	background: none;
+	
+	border: 2px solid $invalid;
 	.bi {
-		color: white;
+		color: $invalid;
 	}
 	&:hover {
 		//box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
 		box-shadow: none;
+		background: $invalid;
+		.bi {
+			color: white;
+		}
 	}
 	&.edit {
+		
+		border: none;
 		background: $yellow;
+		.bi {
+			color: white;
+		}
 		&:hover {
-			//background: darken($yellow, 10%);
 			background: white;
-			// .bi {
-			// 	color: white;
-			// }
+			
 			.bi {
 				color: $yellow;
 			}
@@ -367,20 +378,22 @@ body {
 	}
 	&.delete {
 		background: $invalid;
-
+		border: none;
+		.bi {
+			color: white;
+		}
 		&:hover {
-			//background: $invalid;
-			//background: darken($invalid, 10%);
+
 			background: white;
-			// .bi {
-			// 	color: white;
-			// }
+			
 			.bi {
 				color: $invalid;
 			}
 		}
 	}
+	
 }
+
 .btn-control {
 	padding: 10px 30px;
 	border-radius: 8px;
@@ -494,5 +507,18 @@ body {
 		&:hover {
 			color: $gray2;
 		}
+	}
+}
+// #edit-form {
+// 	display: flex;
+// 	justify-content: center;
+// }
+@media print {
+	body {
+		background: none;
+	}
+    th {
+		border: 2px solid $gray2;
+		color: $textcol !important;
 	}
 }

@@ -34,11 +34,11 @@
     }
 }
 input, select {
-    outline: none;
-    
+	outline: none;
     padding: 10px;
     border-radius: 4px;
     border: 2px solid transparent;
+
     
 }
 label strong {
@@ -97,4 +97,11 @@ label strong {
 			display: block;
 		}
 	}
+}
+.invalid {
+	outline: 2px $invalid solid !important;
+}
+button:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
 }

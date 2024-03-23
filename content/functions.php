@@ -110,28 +110,3 @@ function home_url($page) {
 }
 
 
-function insert_product() {
-    include ROOT_PATH . '/db-connection.php';
-    $name = $_POST['p_name'];
-    $cat = $_POST['cat'];
-    $producer = $_POST['producer'];
-    $char = $_POST['char'];
-
-    try {
-        $stmt = $conn->prepare("INSERT INTO Product (category_number, product_name,  producer, characteristics) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$cat, $name, $producer, $char]);
-        $inserted = $stmt->rowCount() > 0;
-    } catch (PDOException $e) {
-        $inserted = false;
-    }
-
-    if ($inserted) {
-        $_SESSION['message'] = 'Product '.$name.' was added successfully';
-        $_SESSION['message_type'] = 'success';
-    } else {
-        $_SESSION['message'] = 'There was an error inserting the product';
-        $_SESSION['message_type'] = 'danger';
-    }
-    header('Location: products-all.php');
-    exit;
-}
