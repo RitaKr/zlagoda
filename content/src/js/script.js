@@ -106,7 +106,9 @@ $(document).ready(function () {
 				const nn = this.dataset["nn"];
 				const options = this.dataset["options"];
                 const type = this.dataset["type"];
-                const validate = this.dataset["validate"];
+                const max = this.dataset["max"];
+                const min = this.dataset["min"];
+                const maxlength = this.dataset["maxlength"];
 				const text = this.innerText;
 				originalText.push(text); //preserving original values for the case of canceling
 
@@ -164,25 +166,21 @@ $(document).ready(function () {
 				} else {
 					//otherwise text input
 					td.html(
-						'<input type="text" name="' +
-							keyName +
-							'" value="' +
-							text +
-							'" ' +
-							(nn ? "required " : "") +
-							">"
+						`<input type="text" name="${keyName}" value="${text}" ${nn ? "required " : ""}
+							 maxlength="${(maxlength ? maxlength : 50)}">`
 					);
 
 					const input = td.children("input");
 					input.on("keyup change input", function () {
-						if (input.val().trim() == "") {
+                        
+						if (this.required && input.val().trim() == "") {
 							$(this).toggleClass("invalid", true);
 						} else {
 							$(this).toggleClass("invalid", false);
 						}
                         if (type=="double") {
                             console.log(input.val(), parseFloat(input.val()), input.val()==parseFloat(input.val()));
-                            if (isNaN(parseFloat(input.val())) || parseFloat(input.val()) < 0 || input.val()!=parseFloat(input.val())) {
+                            if (isNaN(parseFloat(input.val())) || parseFloat(input.val()) < (min ? min : 0) || parseFloat(input.val())>max || input.val()!=parseFloat(input.val()) ) {
                                 $(this).toggleClass("invalid", true);
                             } else {
                                 $(this).toggleClass("invalid", false);
@@ -190,7 +188,7 @@ $(document).ready(function () {
                         }
                         if (type=="int") {
                             console.log(input.val(), parseInt(input.val()), input.val()==parseInt(input.val()));
-                            if (isNaN(parseInt(input.val())) || parseInt(input.val()) < 0 || input.val()!=parseInt(input.val())) {
+                            if (isNaN(parseInt(input.val())) || parseInt(input.val()) < (min ? min : 0) || parseInt(input.val())>max || input.val()!=parseInt(input.val())) {
                                 $(this).toggleClass("invalid", true);
                             } else {
                                 $(this).toggleClass("invalid", false);

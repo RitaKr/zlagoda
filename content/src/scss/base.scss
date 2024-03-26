@@ -4,6 +4,16 @@
 	padding: 0;
 	font-family: "Didact Gothic", sans-serif;
 }
+body {
+	background: $bg;
+	margin: 0;
+	padding: 0;
+	font-size: 16px;
+	position: relative;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
 input:focus {
 	outline: none;
 }
@@ -23,28 +33,21 @@ a,
 		color: $hovercol;
 	}
 }
-body {
-	background: $bg;
-	margin: 0;
-	padding: 0;
-	font-size: 16px;
-	position: relative;
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
+p {
+	color: $textcol;
 }
 .mainheader {
 	background: $bg2;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 10px 20px;
+	padding: 0px 20px;
+	height: 60px;
 	width: 100%;
+	z-index: 100;
+	position: sticky;
 
-	h2 {
-		color: $textcol;
-		font-size: 2rem;
-	}
+	
 
 	.signin-switch {
 		border-radius: 30px;
@@ -74,6 +77,10 @@ body {
 		display: flex;
 		align-items: center;
 		gap: 10px;
+		> * {
+			display: flex;
+		align-items: center;
+		}
 	}
 	.bi-search {
 		width: 1.5rem;
@@ -85,20 +92,69 @@ body {
 		height: 40px;
 		width: 40px;
 		border-radius: 100%;
+
+		&:hover {
+			background: $gray2;
+		
+		}
 	}
 }
 
 .mainmenu {
+	background: inherit;
+	
+	height: 100%;
 	ul {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		list-style: none;
-		gap: 20px;
+		gap: 25px;
 		font-size: 1.2rem;
+		
+		height: 100%;
+	}
+	li {
+		position: relative;
+		
+		height: 100%;
 	}
 	a {
 		font-weight: 500;
+		display: flex;
+		align-items: center;
+		height: 100%;
+	}
+	.submenu {
+		margin: 0;
+		transform-origin: top;
+		transform: translateX(-50%) scaleY(0);
+		transition: transform 0.3s ease;
+		position: absolute;
+		top: 100%;
+		width: fit-content;
+		left: 50%;
+		background: $gray;
+		border-radius: 0 0 10px 10px;
+		height: fit-content;
+		z-index: 10;
+		gap: 0;
+		padding: 1rem 0;
+		li {
+			padding: 0 1rem;
+			a {
+			text-wrap: nowrap;
+			height: 100%;
+		}}
+		li:first-child {
+		border-right: 2px solid $bg2;
+		}
+	}
+	
+	li:hover > .submenu,
+	.submenu:hover {
+		//position: relative;
+		transform: translateX(-50%) scaleY(1);
 	}
 }
 .logo {
@@ -107,7 +163,9 @@ body {
 	h2 {
 		font-weight: 300;
 		font-size: 2rem;
+		color: $textcol;
 	}
+	
 }
 .footer {
 	background: $bg2;
@@ -140,7 +198,6 @@ body {
 		background: $primary-hover;
 		border: 2px solid $primary-hover;
 	}
-
 }
 
 .main-wrap {
@@ -285,27 +342,51 @@ body {
 	border: 2px solid $gray2;
 	border-collapse: collapse;
 	background: darken($gray2, 40%);
-	
-	th {
+	thead {
 		color: white;
 		text-align: center;
-
-		&:nth-child(1) {
-			background: $gray;
-		}
-		&:nth-child(2) {
-			background: $gray2;
-		}
-		&:nth-child(3) {
-			background: darken($gray2, 10%);
-		}
-		&:nth-child(4) {
-			background: darken($gray2, 20%);
-		}
-		&:nth-child(5) {
-			background: darken($gray2, 30%);
+		tr {
+			.shade1 {
+				background: $gray;
+			}
+			.shade2 {
+				background: $gray2;
+			}
+			.shade3 {
+				background: darken($gray2, 10%);
+			}
+			.shade4 {
+				background: darken($gray2, 20%);
+			}
+			.shade5 {
+				background: darken($gray2, 30%);
+			}
+			.shade6 {
+				background: darken($gray2, 40%);
+			}
+			&:first-child {
+				:nth-child(1) {
+					background: $gray;
+				}
+				:nth-child(2) {
+					background: $gray2;
+				}
+				:nth-child(3) {
+					background: darken($gray2, 10%);
+				}
+				:nth-child(4) {
+					background: darken($gray2, 20%);
+				}
+				:nth-child(5) {
+					background: darken($gray2, 30%);
+				}
+				:nth-child(6) {
+					background: darken($gray2, 40%);
+				}
+			}
 		}
 	}
+
 	th,
 	td {
 		padding: 10px;
@@ -321,11 +402,11 @@ body {
 	}
 	tr:has(td .table-btn.edit:hover) td {
 		background: $yellow;
-		
 	}
 	tr.editing td {
 		background: lighten($yellow, 40%);
-		input, select {
+		input,
+		select {
 			width: 100%;
 			border: 2px solid lighten($yellow, 30%);
 			//background: lighten($yellow, 40%);
@@ -348,7 +429,7 @@ body {
 	box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
 	transition: all $transition;
 	background: none;
-	
+
 	border: 2px solid $invalid;
 	.bi {
 		color: $invalid;
@@ -362,7 +443,6 @@ body {
 		}
 	}
 	&.edit {
-		
 		border: none;
 		background: $yellow;
 		.bi {
@@ -370,7 +450,7 @@ body {
 		}
 		&:hover {
 			background: white;
-			
+
 			.bi {
 				color: $yellow;
 			}
@@ -383,15 +463,13 @@ body {
 			color: white;
 		}
 		&:hover {
-
 			background: white;
-			
+
 			.bi {
 				color: $invalid;
 			}
 		}
 	}
-	
 }
 
 .btn-control {
@@ -458,6 +536,22 @@ body {
 			display: flex;
 			align-items: stretch;
 			gap: 20px;
+
+			&:has(legend) {
+				border: 1px white solid;
+				border-radius: 10px;
+				padding: 10px;
+			}
+			legend {
+				color: white;
+				background: $gray2;
+				padding: 0 10px;
+				border-radius: 5px;
+				font-weight: 500;
+				font-size: 0.85rem;
+				letter-spacing: 1px;
+				line-height: 1.5em;
+			}
 		}
 		label {
 			display: flex;
@@ -523,7 +617,7 @@ body {
 	body {
 		background: none;
 	}
-    th {
+	th {
 		border: 2px solid $gray2;
 		color: $textcol !important;
 	}

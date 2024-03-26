@@ -85,7 +85,7 @@ function insert_item($conn)
 
                     //then editing older product, making it cheaper and promotional, referring to $_POST["UPC"] (new upc) as its UPC_prom
                     $new_prom["promotional_product"] = '1';
-                    $new_prom["selling_price"] = doubleval($_POST["selling_price"]) * 0.8;
+                    $new_prom["selling_price"] = doubleval($new_prom["selling_price"]) * 0.8;
                     $new_prom["UPC_prom"] = $_POST["UPC"];
 
                     foreach ($new_prom as $key => $val) {

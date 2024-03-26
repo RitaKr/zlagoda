@@ -13,9 +13,14 @@ if ($_SERVER['PHP_SELF'] != '/signin.php' && $_SERVER['PHP_SELF'] != '/signup.ph
     header("Location: /signin.php");
     exit;
 }
+if (has_role('cashier') && $_SERVER['PHP_SELF'] == '/employees.php') {
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,9 +47,13 @@ if ($_SERVER['PHP_SELF'] != '/signin.php' && $_SERVER['PHP_SELF'] != '/signup.ph
 
         <nav class="mainmenu">
             <ul>
-                <li>
-                    <a href="<? ROOT_PATH ?>/employees.php" target="">Employees</a>
-                </li>
+                <?php if (has_role('manager')): ?>
+
+                    <li>
+                        <a href="<? ROOT_PATH ?>/employees.php" target="">Employees</a>
+                    </li>
+                <?php endif; ?>
+
                 <li>
                     <a href="<? ROOT_PATH ?>/bills.php" target="">Bills</a>
                 </li>
@@ -53,6 +62,10 @@ if ($_SERVER['PHP_SELF'] != '/signin.php' && $_SERVER['PHP_SELF'] != '/signup.ph
                 </li>
                 <li>
                     <a href="<? ROOT_PATH ?>/products.php" target="">Products</a>
+                    <ul class="submenu">
+                        <li><a href="<? ROOT_PATH ?>/products-all.php" target="">All</a></li>
+                        <li><a href="<? ROOT_PATH ?>/products-store.php" target="">In Store</a></li>
+                    </ul>
                 </li>
                 <li>
                     <a href="<? ROOT_PATH ?>/categories.php" target="">Categories</a>
@@ -74,8 +87,8 @@ if ($_SERVER['PHP_SELF'] != '/signin.php' && $_SERVER['PHP_SELF'] != '/signup.ph
                 </div>
 
             <?php else: ?>
-                <a href="<? ROOT_PATH ?>/account.php" alt="My account" target="" class="my-account">
-                
+                <a href="<? ROOT_PATH ?>/account.php" alt="My account" title="My account" target="" class="my-account">
+
                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-person-circle"
                         viewBox="0 0 16 16">
                         <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />

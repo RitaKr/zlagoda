@@ -29,7 +29,7 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                             d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
                     </svg>
                 </button>
-                <input type="search" name="search" placeholder="Search for store products by their name"
+                <input type="search" name="search" placeholder="Search for store products by their UPC or name"
                     value="<?= $filters['search'] ? $filters['search'] : '' ?>">
             </fieldset>
 
@@ -53,11 +53,11 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                     $stmt = $conn->query("SELECT * FROM Category");
                     $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                    foreach ($categories as $category):
+                    foreach ($categories as $d):
                         ?>
-                        <option value="<?= $category['category_number'] ?>" <?= isset ($filters['cat']) && $filters['cat'] == $category['category_number'] ? "selected" : ""
+                        <option value="<?= $d['category_number'] ?>" <?= isset ($filters['cat']) && $filters['cat'] == $d['category_number'] ? "selected" : ""
                               ?>>
-                            <?= $category['category_name'] ?>
+                            <?= $d['category_name'] ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -99,7 +99,7 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                         <!-- <p>UPC: <?//=get_new_UPC()?> </p> -->
                     <fieldset>
                         <label for="p_id">
-                            <span>Product <strong>*</strong></span>
+                            <span>Product <span class="red">*</span></span>
                             <select name="id_product" id="p_id">
                                 <?php
                                 $stmt = $conn->query("SELECT * FROM Product WHERE Product.id_product NOT IN (SELECT Store_Product.id_product FROM Store_Product WHERE promotional_product = 1) ORDER BY product_name");
@@ -115,12 +115,12 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                         </label>
 
                         <label for="selling_price">
-                            <span>Selling price <strong>*</strong></span>
+                            <span>Selling price <span class="red">*</span></span>
                             <input type="number" name="selling_price" id="selling_price" placeholder="Enter selling price"
                                 min="0" max="9999999999999" step="0.0001" required>
                         </label>
                         <label for="products_number">
-                            <span>Number of products <strong>*</strong></span>
+                            <span>Number of products <span class="red">*</span></span>
                             <input type="number" name="products_number" id="products_number"
                                 placeholder="Enter number of products" min="1" max="9999999999999" required>
                         </label>
@@ -146,7 +146,7 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                             </select>
                         </label> -->
                     
-
+                        <span class="notice"><span class="red">*</span> - required fields</span>
                     <button type="submit" class="btn-primary" disabled>Add</button>
                 </form>
             </details>
@@ -163,25 +163,25 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
     }
 
     $sort = $filters['sort'] ? $filters['sort'] : 'product_name';
-    $filter_cat = $filters['cat'] ? "WHERE category_number = " . $filters['cat'] : '';
-    $filter_search = $filters['search'] ? ($filter_cat ? "AND" : "WHERE") . " product_name LIKE '%" . $filters['search'] . "%'" : '';
-    $promo = $filters['promo'] == "0" || $filters['promo'] == "1" ? ($filter_search || $filter_cat ? "AND" : "WHERE") . " promotional_product = " . $filters['promo'] : '';
+    $filter_discount = $filters['cat'] ? "WHERE category_number = " . $filters['cat'] : '';
+    $filter_search = $filters['search'] ? ($filter_discount ? "AND" : "WHERE") . " product_name LIKE '%" . $filters['search'] . "%' OR UPC LIKE '%" . $filters['search'] . "%'" : '';
+    $promo = $filters['promo'] == "0" || $filters['promo'] == "1" ? ($filter_search || $filter_discount ? "AND" : "WHERE") . " promotional_product = " . $filters['promo'] : '';
     //print_r($filters);
     //print_r("SELECT * FROM Store_Product LEFT JOIN Product ON Store_Product.id_product = Product.id_product $promo ORDER BY $sort");
-    $stmt = $conn->prepare("SELECT * FROM Store_Product LEFT JOIN Product ON Store_Product.id_product = Product.id_product $filter_cat $filter_search $promo ORDER BY $sort");
+    $stmt = $conn->prepare("SELECT * FROM Store_Product LEFT JOIN Product ON Store_Product.id_product = Product.id_product $filter_discount $filter_search $promo ORDER BY $sort");
     $stmt->execute();
-    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($filter_search && count($products) > 0) {
+    if ($filter_search && count($clients) > 0) {
         if ($filters['cat']) {
             $cat_num = $filters['cat'];
             $stmt = $conn->query("SELECT category_name FROM Category WHERE category_number = $cat_num");
             $cat_name = $stmt->fetch(PDO::FETCH_ASSOC)['category_name'];
         }
-        echo '<div class="banner alert-success">Found ' . count($products) . ' match' . (count($products) > 1 ? 'es' : '') . ' for search query "' . $filters['search'] . ($cat_name ? '" in category ' . $cat_name : '"') . '<button class="bi close">🗙</button></div>';
+        echo '<div class="banner alert-success">Found ' . count($clients) . ' match' . (count($clients) > 1 ? 'es' : '') . ' for search query "' . $filters['search'] . ($cat_name ? '" in category ' . $cat_name : '"') . '<button class="bi close">🗙</button></div>';
     }
 
-    if (count($products) == 0): ?>
+    if (count($clients) == 0): ?>
         <div class="banner alert-danger">Nothing is found</div>
     <?php else: ?>
 
@@ -194,7 +194,7 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                         <th>Category</th>
                         <th>Producer</th>
                         <th>Characteristics</th>
-                        <th>Selling price</th>
+                        <th>Selling price, UAH</th>
                         <th>Number of items</th>
                         <th>Promotional</th>
                     </tr>
@@ -202,8 +202,8 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                 <tbody>
                     <?php
 
-                    foreach ($products as $product):
-                        $p_id = $product['id_product'];
+                    foreach ($clients as $client):
+                        $p_id = $client['id_product'];
 
                         $stmt = $conn->query("SELECT id_product AS id, product_name AS item_name, (SELECT category_name FROM Category WHERE Category.category_number = Product.category_number) AS category_name, producer, characteristics FROM Product");
                         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -219,7 +219,7 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                         // echo '</code><br>';
                 
 
-                        $cat_num = $product['category_number'];
+                        $cat_num = $client['category_number'];
                         $stmt = $conn->query("SELECT category_number, category_name FROM Category WHERE category_number = $cat_num");
                         $cat_name = $stmt->fetch(PDO::FETCH_ASSOC)['category_name'];
 
@@ -233,39 +233,39 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
 
                         <tr>
                             <td>
-                                <?= $product['UPC'] ?>
+                                <?= $client['UPC'] ?>
                             </td>
                             <!-- <td data-key="id_product" data-val="<?//= $p_id ?>" data-fk='<?//= $p_array ?>'> -->
                             <td>
-                                <?= $product['product_name']; ?>
+                                <?= $client['product_name']; ?>
                             </td>
 
                             <td data-info>
                                 <?= $cat_name; ?>
                             </td>
                             <td data-info>
-                                <?= $product['producer'] ?>
+                                <?= $client['producer'] ?>
                             </td>
                             <td data-info>
-                                <?= $product['characteristics']; ?>
+                                <?= $client['characteristics']; ?>
                             </td>
                             <td data-key="selling_price" data-nn="true" data-type="double">
-                                <?= $product['selling_price'] ?>
+                                <?= round($client['selling_price'], 2) ?>
                             </td>
                             <td data-key="products_number" data-nn="true" data-type="int">
-                                <?= $product['products_number'] ?>
+                                <?= $client['products_number'] ?>
                             </td>
                             <!-- <td data-key="promotional_product" data-nn="true" data-options='<?//= json_encode($boolValues)  ?>'>
                                 <?//=$boolValues[$product['promotional_product']]  ?>
                             </td> -->
 
                             <td>
-                                <?= $boolValues[$product['promotional_product']] ?>
+                                <?= $boolValues[$client['promotional_product']] ?>
                             </td>
 
                             <?php if (has_role('manager')): ?>
                                 <td>
-                                    <button meta-id="<?= $product['UPC'] ?>" meta-table="Store_Product" meta-key="UPC"
+                                    <button meta-id="<?= $client['UPC'] ?>" meta-table="Store_Product" meta-key="UPC"
                                         class="edit table-btn" aria-roledescription="edit" title="Edit item">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-pencil-fill" viewBox="0 0 16 16">
@@ -274,7 +274,7 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                                         </svg>
                                     </button>
                                 </td>
-                                <td><button meta-id="<?= $product['UPC'] ?>" meta-table="Store_Product" meta-key="UPC"
+                                <td><button meta-id="<?= $client['UPC'] ?>" meta-table="Store_Product" meta-key="UPC"
                                         class="delete table-btn" title="Delete item">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-trash-fill" viewBox="0 0 16 16">

@@ -35,7 +35,7 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                 <select name="sort" id="sort">
                     <option value="product_name" <?= !isset ($filters['sort']) || $filters['sort'] == "product_name" ? "selected" : "" ?>>Name</option>
                     <option value="id_product" <?= isset ($filters['sort']) && $filters['sort'] == "id_product" ? "selected" : "" ?>>ID</option>
-                    <!-- <option value="quantity">Quantity</option> -->
+                    
                 </select>
             </label>
 
@@ -48,24 +48,16 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                     $stmt = $conn->query("SELECT * FROM Category");
                     $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                    foreach ($categories as $category):
+                    foreach ($categories as $d):
                         ?>
-                        <option value="<?php echo $category['category_number'] ?>" <?= isset ($filters['cat']) && $filters['cat'] == $category['category_number'] ? "selected" : "" ?>>
-                            <?php echo $category['category_name'] ?>
+                        <option value="<?php echo $d['category_number'] ?>" <?= isset ($filters['cat']) && $filters['cat'] == $d['category_number'] ? "selected" : "" ?>>
+                            <?php echo $d['category_name'] ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
             </label>
 
-            <label for="promo" class="promo-filter">
-                <span>Promotional</span>
-                <select name="promo" id="promo">
-                    <option value="" <?= !$filters['promo'] ? "selected" : "" ?>>All</option>
-                    <option value="true" <?= isset ($filters['promo']) && $filters['promo'] == "true" ? "selected" : "" ?>>
-                        Promotional</option>
-                    <option value="false" <?= isset ($filters['promo']) && $filters['promo'] == "false" ? "selected" : "" ?>>Non-promotional</option>
-                </select>
-            </label>
+            
         </form>
     </section>
 
@@ -90,37 +82,38 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                     <input type="hidden" name="table" value="Product">
                     <fieldset>
                         <label for="p_name">
-                            <span>Name <strong>*</strong></span>
+                            <span>Name <span class="red">*</span></span>
                             <input type="text" name="product_name" id="p_name" placeholder="Enter product name" maxlength="50"
                                 required>
                         </label>
                         <label for="cat">
-                            <span>Category <strong>*</strong></span>
+                            <span>Category <span class="red">*</span></span>
                             <select name="category_number" id="cat">
                                 <?php
                                 $stmt = $conn->query("SELECT * FROM Category ORDER BY category_name");
                                 $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                                foreach ($categories as $category):
+                                foreach ($categories as $d):
                                     ?>
-                                    <option value="<?php echo $category['category_number'] ?>">
-                                        <?php echo $category['category_name'] ?>
+                                    <option value="<?php echo $d['category_number'] ?>">
+                                        <?php echo $d['category_name'] ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
                         </label>
                         <label for="producer">
-                            <span>Producer <strong>*</strong></span>
+                            <span>Producer <span class="red">*</span></span>
                             <input type="text" name="producer" id="producer" placeholder="Enter producer" maxlength="50"
                                 required>
                         </label>
                     </fieldset>
 
                     <label for="char">
-                        <span>Characteristics <strong>*</strong></span>
+                        <span>Characteristics <span class="red">*</span></span>
                         <textarea name="characteristics" id="char" placeholder="Enter characteristics" rows="4" maxlength="100"
                             required></textarea>
                     </label>
+                    <span class="notice"><span class="red">*</span> - required fields</span>
                     <button type="submit" class="btn-primary" disabled>Add</button>
                 </form>
             </details>
@@ -137,23 +130,23 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
     }
 
     $sort = $filters['sort'] ? $filters['sort'] : 'product_name';
-    $filter_cat = $filters['cat'] ? "WHERE category_number = " . $filters['cat'] : '';
-    $filter_search = $filters['search'] ? ($filter_cat ? "AND" : "WHERE") . " product_name LIKE '%" . $filters['search'] . "%'" : '';
+    $filter_discount = $filters['cat'] ? "WHERE category_number = " . $filters['cat'] : '';
+    $filter_search = $filters['search'] ? ($filter_discount ? "AND" : "WHERE") . " product_name LIKE '%" . $filters['search'] . "%'" : '';
 
-    $stmt = $conn->prepare("SELECT * FROM Product $filter_cat $filter_search ORDER BY $sort");
+    $stmt = $conn->prepare("SELECT * FROM Product $filter_discount $filter_search ORDER BY $sort");
     $stmt->execute();
-    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($filter_search && count($products) > 0) {
+    if ($filter_search && count($clients) > 0) {
         if ($filters['cat']) {
             $cat_num = $filters['cat'];
             $stmt = $conn->query("SELECT category_name FROM Category WHERE category_number = $cat_num");
             $cat_name = $stmt->fetch(PDO::FETCH_ASSOC)['category_name'];
         }
-        echo '<div class="banner alert-success">Found ' . count($products) . ' match' . (count($products) > 1 ? 'es' : '') . ' for search query "' . $filters['search'] . ($cat_name ? '" in category ' . $cat_name : '"') . '<button class="bi close">🗙</button></div>';
+        echo '<div class="banner alert-success">Found ' . count($clients) . ' match' . (count($clients) > 1 ? 'es' : '') . ' for search query "' . $filters['search'] . ($cat_name ? '" in category ' . $cat_name : '"') . '<button class="bi close">🗙</button></div>';
     }
 
-    if (count($products) == 0): ?>
+    if (count($clients) == 0): ?>
         <div class="banner alert-danger">Nothing is found</div>
     <?php else: ?>
 
@@ -172,8 +165,8 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                 <tbody>
                     <?php
 
-                    foreach ($products as $product):
-                        $cat_num = $product['category_number'];
+                    foreach ($clients as $client):
+                        $cat_num = $client['category_number'];
                         $stmt = $conn->query("SELECT category_number, category_name FROM Category WHERE category_number = $cat_num");
                         $cat_name = $stmt->fetch(PDO::FETCH_ASSOC)['category_name'];
 
@@ -191,24 +184,24 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
 
                         <tr>
                             <td>
-                                <?= $product['id_product'] ?>
+                                <?= $client['id_product'] ?>
                             </td>
                             <td data-key="product_name" data-nn="true">
-                                <?= $product['product_name'] ?>
+                                <?= $client['product_name'] ?>
                             </td>
 
                             <td data-key="category_number" data-val="<?= $cat_num ?>" data-fk='<?= $cat_array ?>'>
                                 <?= $cat_name; ?>
                             </td>
                             <td data-key="producer" data-nn="true">
-                                <?= $product['producer'] ?>
+                                <?= $client['producer'] ?>
                             </td>
-                            <td data-key="characteristics" data-nn="true">
-                                <?= $product['characteristics'] ?>
+                            <td data-key="characteristics" data-nn="true" data-maxlength="100">
+                                <?= $client['characteristics'] ?>
                             </td>
                             <?php if (has_role('manager')): ?>
                                 <td>
-                                    <button meta-id="<?= $product['id_product'] ?>" meta-table="Product" meta-key="id_product"
+                                    <button meta-id="<?= $client['id_product'] ?>" meta-table="Product" meta-key="id_product"
                                         class="edit table-btn" aria-roledescription="edit" title="Edit item">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-pencil-fill" viewBox="0 0 16 16">
@@ -217,7 +210,7 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                                         </svg>
                                     </button>
                                 </td>
-                                <td><button meta-id="<?= $product['id_product'] ?>" meta-table="Product" meta-key="id_product"
+                                <td><button meta-id="<?= $client['id_product'] ?>" meta-table="Product" meta-key="id_product"
                                         class="delete table-btn" title="Delete item">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-trash-fill" viewBox="0 0 16 16">

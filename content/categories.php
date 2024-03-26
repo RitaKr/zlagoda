@@ -26,13 +26,13 @@
                     <input type="hidden" name="table" value="Category">
 
                     <label for="name">
-                        <span>Name <strong>*</strong></span>
+                        <span>Name <span class="red">*</span></span>
                         <input type="text" name="category_name" id="name" placeholder="Enter category name" maxlength="50"
                             required>
                     </label>
 
 
-
+                    <span class="notice"><span class="red">*</span> - required fields</span>
                     <button type="submit" class="btn-primary" disabled>Add</button>
                 </form>
             </details>
@@ -67,22 +67,22 @@
                 <tbody>
                     <?php
 
-                    foreach ($items as $category):
+                    foreach ($items as $d):
                         
                         ?>
 
                         <tr>
                             <td>
-                                <?= $category['category_number'] ?>
+                                <?= $d['category_number'] ?>
                             </td>
                             <td data-key="category_name" data-nn="true">
-                                <?= $category['category_name'] ?>
+                                <?= $d['category_name'] ?>
                             </td>
 
             
                             <?php if (has_role('manager')): ?>
                                 <td>
-                                    <button meta-id="<?= $category['category_number'] ?>" meta-table="Category" meta-key="category_number"
+                                    <button meta-id="<?= $d['category_number'] ?>" meta-table="Category" meta-key="category_number"
                                         class="edit table-btn" aria-roledescription="edit" title="Edit item">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-pencil-fill" viewBox="0 0 16 16">
@@ -91,7 +91,7 @@
                                         </svg>
                                     </button>
                                 </td>
-                                <td><button meta-id="<?= $category['category_number'] ?>" meta-table="Category" meta-key="category_number"
+                                <td><button meta-id="<?= $d['category_number'] ?>" meta-table="Category" meta-key="category_number"
                                         class="delete table-btn" title="Delete item">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-trash-fill" viewBox="0 0 16 16">

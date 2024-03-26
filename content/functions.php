@@ -112,9 +112,18 @@ function home_url($page) {
 function get_new_UPC(){
     include ROOT_PATH . '/db-connection.php';
     $stmt = $conn->query("SELECT MAX(CAST(UPC AS UNSIGNED)) as max FROM Store_Product");
-    $max = $stmt->fetch(PDO::FETCH_ASSOC)["max"];
-    //print_r($max);
-    return intval($max) + 1;
+    $max = intval($stmt->fetch(PDO::FETCH_ASSOC)["max"])+1;
+
+    return str_pad($max, 12, '0', STR_PAD_LEFT);
+}
+
+function get_new_card_num(){
+    include ROOT_PATH . '/db-connection.php';
+    $stmt = $conn->query("SELECT MAX(CAST(card_number AS UNSIGNED)) as max FROM Customer_Card");
+    $max = intval($stmt->fetch(PDO::FETCH_ASSOC)["max"])+1;
+
+    return str_pad($max, 13, '0', STR_PAD_LEFT);
+    
 }
 
 
