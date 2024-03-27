@@ -62,6 +62,10 @@
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
+                        <?php if (has_role('manager')): ?>
+                        <th></th>
+                        <th></th>
+                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>

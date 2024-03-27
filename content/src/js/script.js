@@ -144,30 +144,28 @@ $(document).ready(function () {
                     });
                     //console.log(infoValues);
 				} else if (options) {
-					let optionsArray = JSON.parse(options);
-                    console.log(optionsArray);
-                    if (Array.isArray(optionsArray)) {
+					let optionsObject = JSON.parse(options);
+                    console.log(optionsObject);
+                    if (Array.isArray(optionsObject)) {
                         console.log("is array");
-                        optionsArray = optionsArray.map((option, i) => {
+                        optionsObject = optionsObject.map((option, i) => {
                             return { [i]: option };
                         });
                     }
-                    console.log(optionsArray);
-					//keys = Object.keys(optionsArray);
+                    console.log(optionsObject);
 					td.html(
                         `<select name="${keyName}">
-                        ${optionsArray.map((option) => {
-                            const key = Object.keys(option)[0];
-                            const val = Object.values(option)[0];
-                            return `<option value="${key}" ${val == text ? "selected" : ""}>${val}</option>`;
+                        ${Object.entries(optionsObject).map(([key, val]) => {
+                            return `<option value="${key}" ${text == val ? "selected" : ""}>${val}</option>`;
                         }).join("")}
                         </select>`);
                     
 				} else {
 					//otherwise text input
 					td.html(
-						`<input type="text" name="${keyName}" value="${text}" ${nn ? "required " : ""}
-							 maxlength="${(maxlength ? maxlength : 50)}">`
+						`<input type="${type=='date'? 'date' : 'text'}" name="${keyName}" value="${text}" ${nn ? "required " : ""}
+							 maxlength="${(maxlength ? maxlength : 50)}"
+                             ${max ? 'max='+max: ''}>`
 					);
 
 					const input = td.children("input");
@@ -194,6 +192,7 @@ $(document).ready(function () {
                                 $(this).toggleClass("invalid", false);
                             }
                         }
+                        
                         //console.log(parseFloat(input.val()));
 						//console.log("empty:", empty);
 

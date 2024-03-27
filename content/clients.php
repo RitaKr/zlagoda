@@ -16,7 +16,7 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
     <section class="control-panel">
 
         <form action="" method="post" class="filters-form ">
-            <input type="hidden" name="table" value="Product">
+            <input type="hidden" name="table" value="Customer_Card">
             <fieldset class="search-fieldset">
 
                 <button type="submit">
@@ -146,10 +146,10 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
     }
 
     $sort = $filters['sort'] ? $filters['sort'] : 'cust_surname';
-    $filter_discount = $filters['discount'] ? "WHERE percent = " . $filters['discount'] : '';
-    $filter_search = $filters['search'] ? ($filter_discount ? "AND" : "WHERE") . " cust_surname LIKE '%" . $filters['search'] . "%'" : '';
+    $filter_role = $filters['discount'] ? "WHERE percent = " . $filters['discount'] : '';
+    $filter_search = $filters['search'] ? ($filter_role ? "AND" : "WHERE") . " cust_surname LIKE '%" . $filters['search'] . "%'" : '';
 
-    $stmt = $conn->prepare("SELECT * FROM Customer_Card $filter_discount $filter_search ORDER BY $sort");
+    $stmt = $conn->prepare("SELECT * FROM Customer_Card $filter_role $filter_search ORDER BY $sort");
     $stmt->execute();
     $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -172,6 +172,8 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                         <th rowspan="2">Discount, %</th>
                         <th rowspan="2">Phone number</th>
                         <th colspan="3">Address</th>
+                        <th rowspan="2"></th>
+                        <?php if (has_role('manager')): ?><th rowspan="2"></th><?php endif; ?>
                     </tr>
                     <tr>
                         

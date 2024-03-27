@@ -42,11 +42,11 @@ p {
 	align-items: center;
 	justify-content: space-between;
 	padding: 0px 20px;
-	height: 60px;
+	height: 70px;
 	width: 100%;
 	z-index: 100;
 	position: sticky;
-
+	top: 0;
 	
 
 	.signin-switch {
@@ -345,7 +345,11 @@ p {
 	thead {
 		color: white;
 		text-align: center;
+		position: sticky;
+		top: 69px;
+		background: inherit;
 		tr {
+			
 			.shade1 {
 				background: $gray;
 			}

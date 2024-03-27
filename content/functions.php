@@ -126,4 +126,13 @@ function get_new_card_num(){
     
 }
 
+function get_new_empl_id(){
+    include ROOT_PATH . '/db-connection.php';
+    $stmt = $conn->query("SELECT MAX(CAST(id_employee AS UNSIGNED)) as max FROM Employee");
+    $max = intval($stmt->fetch(PDO::FETCH_ASSOC)["max"])+1;
+
+    return str_pad($max, 10, '0', STR_PAD_LEFT);
+    
+}
+
 

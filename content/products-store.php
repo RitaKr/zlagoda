@@ -163,12 +163,12 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
     }
 
     $sort = $filters['sort'] ? $filters['sort'] : 'product_name';
-    $filter_discount = $filters['cat'] ? "WHERE category_number = " . $filters['cat'] : '';
-    $filter_search = $filters['search'] ? ($filter_discount ? "AND" : "WHERE") . " product_name LIKE '%" . $filters['search'] . "%' OR UPC LIKE '%" . $filters['search'] . "%'" : '';
-    $promo = $filters['promo'] == "0" || $filters['promo'] == "1" ? ($filter_search || $filter_discount ? "AND" : "WHERE") . " promotional_product = " . $filters['promo'] : '';
+    $filter_role = $filters['cat'] ? "WHERE category_number = " . $filters['cat'] : '';
+    $filter_search = $filters['search'] ? ($filter_role ? "AND" : "WHERE") . " product_name LIKE '%" . $filters['search'] . "%' OR UPC LIKE '%" . $filters['search'] . "%'" : '';
+    $promo = $filters['promo'] == "0" || $filters['promo'] == "1" ? ($filter_search || $filter_role ? "AND" : "WHERE") . " promotional_product = " . $filters['promo'] : '';
     //print_r($filters);
     //print_r("SELECT * FROM Store_Product LEFT JOIN Product ON Store_Product.id_product = Product.id_product $promo ORDER BY $sort");
-    $stmt = $conn->prepare("SELECT * FROM Store_Product LEFT JOIN Product ON Store_Product.id_product = Product.id_product $filter_discount $filter_search $promo ORDER BY $sort");
+    $stmt = $conn->prepare("SELECT * FROM Store_Product LEFT JOIN Product ON Store_Product.id_product = Product.id_product $filter_role $filter_search $promo ORDER BY $sort");
     $stmt->execute();
     $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -197,6 +197,10 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                         <th>Selling price, UAH</th>
                         <th>Number of items</th>
                         <th>Promotional</th>
+                        <?php if (has_role('manager')): ?>
+                        <th></th>
+                        <th></th>
+                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -224,7 +228,7 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                         $cat_name = $stmt->fetch(PDO::FETCH_ASSOC)['category_name'];
 
                         $boolValues = array('0' => 'No', '1' => 'Yes');
-
+                        //var_dump($boolValues);
                         $stmt = $conn->query("SELECT id_product AS id, product_name AS item_name FROM Product");
 
                         $promo_array = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC), JSON_UNESCAPED_UNICODE);

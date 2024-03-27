@@ -130,10 +130,10 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
     }
 
     $sort = $filters['sort'] ? $filters['sort'] : 'product_name';
-    $filter_discount = $filters['cat'] ? "WHERE category_number = " . $filters['cat'] : '';
-    $filter_search = $filters['search'] ? ($filter_discount ? "AND" : "WHERE") . " product_name LIKE '%" . $filters['search'] . "%'" : '';
+    $filter_role = $filters['cat'] ? "WHERE category_number = " . $filters['cat'] : '';
+    $filter_search = $filters['search'] ? ($filter_role ? "AND" : "WHERE") . " product_name LIKE '%" . $filters['search'] . "%'" : '';
 
-    $stmt = $conn->prepare("SELECT * FROM Product $filter_discount $filter_search ORDER BY $sort");
+    $stmt = $conn->prepare("SELECT * FROM Product $filter_role $filter_search ORDER BY $sort");
     $stmt->execute();
     $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -160,6 +160,10 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                         <th>Category</th>
                         <th>Producer</th>
                         <th>Characteristics</th>
+                        <?php if (has_role('manager')): ?>
+                        <th></th>
+                        <th></th>
+                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>

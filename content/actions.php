@@ -169,6 +169,7 @@ function edit_item($conn)
                 $set .= $key . " = '" . $value . "', ";
         }
         $set = rtrim($set, ', ');
+        //var_dump($set);
         if (isset ($_POST["products_number"]) && $_POST["products_number"] == '0') {
             delete_item($conn);
         } else {
