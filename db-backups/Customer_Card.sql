@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Хост: database
--- Час створення: Бер 20 2024 р., 01:42
--- Версія сервера: 8.3.0
--- Версія PHP: 8.2.8
+-- Host: database
+-- Generation Time: Mar 28, 2024 at 04:37 AM
+-- Server version: 8.3.0
+-- PHP Version: 8.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- База даних: `zlagoda`
+-- Database: `zlagoda`
 --
 
 -- --------------------------------------------------------
 
 --
--- Структура таблиці `Customer_Card`
+-- Table structure for table `Customer_Card`
 --
 
 CREATE TABLE `Customer_Card` (
@@ -40,19 +40,21 @@ CREATE TABLE `Customer_Card` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Дамп даних таблиці `Customer_Card`
+-- Dumping data for table `Customer_Card`
 --
 
 INSERT INTO `Customer_Card` (`card_number`, `cust_surname`, `cust_name`, `cust_patronymic`, `phone_number`, `city`, `street`, `zip_code`, `percent`) VALUES
 ('0000000000000', 'Марчук', 'Марія', NULL, '+380123456789', 'Київ', 'вул. Хрещатик, 5', '02000', 10),
-('0000000000001', 'Бойко', 'Степан', NULL, '+380661234567', 'Київ', 'вул. Хрещатик, 6', '02000', 8);
+('0000000000001', 'Бойко', 'Степан', 'Андрійович', '+380661234567', 'Київ', 'вул. Хрещатик, 6', '02000', 8),
+('0000000000002', 'Пєчкурова', 'Олена', 'Миколаївна', '+380123456788', 'Київ', 'вул. Сковороди, 5', '02000', 25),
+('0000000000003', 'Кирієнко', 'Оксана', '', '+380123456789', 'Київ', '', '02000', 25);
 
 --
--- Індекси збережених таблиць
+-- Indexes for dumped tables
 --
 
 --
--- Індекси таблиці `Customer_Card`
+-- Indexes for table `Customer_Card`
 --
 ALTER TABLE `Customer_Card`
   ADD PRIMARY KEY (`card_number`);

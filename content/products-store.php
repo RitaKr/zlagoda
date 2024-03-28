@@ -9,7 +9,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 $currentPage = basename($_SERVER['SCRIPT_NAME']);
-//print_r($_SESSION['filtersData']);
 $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersData'][$currentPage] : array();
 ?>
 <?php include 'components/header.php'; ?>
@@ -51,13 +50,13 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                     </option>
                     <?php
                     $stmt = $conn->query("SELECT * FROM Category");
-                    $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                    foreach ($categories as $d):
+                    foreach ($products as $product):
                         ?>
-                        <option value="<?= $d['category_number'] ?>" <?= isset ($filters['cat']) && $filters['cat'] == $d['category_number'] ? "selected" : ""
+                        <option value="<?= $product['category_number'] ?>" <?= isset ($filters['cat']) && $filters['cat'] == $product['category_number'] ? "selected" : ""
                               ?>>
-                            <?= $d['category_name'] ?>
+                            <?= $product['category_name'] ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -163,25 +162,25 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
     }
 
     $sort = $filters['sort'] ? $filters['sort'] : 'product_name';
-    $filter_role = $filters['cat'] ? "WHERE category_number = " . $filters['cat'] : '';
-    $filter_search = $filters['search'] ? ($filter_role ? "AND" : "WHERE") . " product_name LIKE '%" . $filters['search'] . "%' OR UPC LIKE '%" . $filters['search'] . "%'" : '';
-    $promo = $filters['promo'] == "0" || $filters['promo'] == "1" ? ($filter_search || $filter_role ? "AND" : "WHERE") . " promotional_product = " . $filters['promo'] : '';
+    $filter_cashier = $filters['cat'] ? "WHERE category_number = " . $filters['cat'] : '';
+    $filter_search = $filters['search'] ? ($filter_cashier ? "AND" : "WHERE") . " product_name LIKE '%" . $filters['search'] . "%' OR UPC LIKE '%" . $filters['search'] . "%'" : '';
+    $date_from = $filters['promo'] == "0" || $filters['promo'] == "1" ? ($filter_search || $filter_cashier ? "AND" : "WHERE") . " promotional_product = " . $filters['promo'] : '';
     //print_r($filters);
     //print_r("SELECT * FROM Store_Product LEFT JOIN Product ON Store_Product.id_product = Product.id_product $promo ORDER BY $sort");
-    $stmt = $conn->prepare("SELECT * FROM Store_Product LEFT JOIN Product ON Store_Product.id_product = Product.id_product $filter_role $filter_search $promo ORDER BY $sort");
+    $stmt = $conn->prepare("SELECT * FROM Store_Product LEFT JOIN Product ON Store_Product.id_product = Product.id_product $filter_cashier $filter_search $date_from ORDER BY $sort");
     $stmt->execute();
-    $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $bills = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($filter_search && count($clients) > 0) {
+    if ($filter_search && count($bills) > 0) {
         if ($filters['cat']) {
             $cat_num = $filters['cat'];
             $stmt = $conn->query("SELECT category_name FROM Category WHERE category_number = $cat_num");
             $cat_name = $stmt->fetch(PDO::FETCH_ASSOC)['category_name'];
         }
-        echo '<div class="banner alert-success">Found ' . count($clients) . ' match' . (count($clients) > 1 ? 'es' : '') . ' for search query "' . $filters['search'] . ($cat_name ? '" in category ' . $cat_name : '"') . '<button class="bi close">🗙</button></div>';
+        echo '<div class="banner alert-success">Found ' . count($bills) . ' match' . (count($bills) > 1 ? 'es' : '') . ' for search query "' . $filters['search'] . ($cat_name ? '" in category ' . $cat_name : '"') . '<button class="bi close">🗙</button></div>';
     }
 
-    if (count($clients) == 0): ?>
+    if (count($bills) == 0): ?>
         <div class="banner alert-danger">Nothing is found</div>
     <?php else: ?>
 
@@ -206,7 +205,7 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                 <tbody>
                     <?php
 
-                    foreach ($clients as $client):
+                    foreach ($bills as $client):
                         $p_id = $client['id_product'];
 
                         $stmt = $conn->query("SELECT id_product AS id, product_name AS item_name, (SELECT category_name FROM Category WHERE Category.category_number = Product.category_number) AS category_name, producer, characteristics FROM Product");

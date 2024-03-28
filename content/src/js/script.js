@@ -57,7 +57,11 @@ $(document).ready(function () {
 	);
 
 	//submits form with filters when filter value is changed
-	$(".filters-form select").on("change", function () {
+	$(".filters-form select, .totals-form select").on("change", function () {
+		$(this).closest("form").submit();
+	});
+    $('.filters-form input[type="date"]').on("blur", function () {
+        
 		$(this).closest("form").submit();
 	});
 	$(".filters-form input").on("input", function () {
@@ -231,6 +235,32 @@ $(document).ready(function () {
 	$(".print").click(function () {
 		var clone = $(".content-table").clone(); // clone the table
 		clone.find("td:has(button)").remove(); // remove td's that contain a button
+		var printContents = $("<div>").append(clone).html(); // get the outer html of the cloned table
+		var originalContents = document.body.innerHTML;
+
+		document.body.innerHTML =
+			`<style type="text/css" media="print">
+        @media print {
+            
+            @page {
+                
+                margin-bottom: 0;
+            }
+            body {
+                
+                padding-bottom: 1cm ;
+            }
+        }
+  </style>` + printContents;
+
+		window.print();
+		document.body.innerHTML = originalContents;
+		location.reload();
+	});
+
+    $(".print-bills").click(function () {
+		var clone = $(".bills-container").clone(); // clone the table
+		clone.find(".bill button").remove(); // remove td's that contain a button
 		var printContents = $("<div>").append(clone).html(); // get the outer html of the cloned table
 		var originalContents = document.body.innerHTML;
 

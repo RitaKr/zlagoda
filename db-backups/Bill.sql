@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Хост: database
--- Час створення: Бер 20 2024 р., 01:43
--- Версія сервера: 8.3.0
--- Версія PHP: 8.2.8
+-- Host: database
+-- Generation Time: Mar 28, 2024 at 04:37 AM
+-- Server version: 8.3.0
+-- PHP Version: 8.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- База даних: `zlagoda`
+-- Database: `zlagoda`
 --
 
 -- --------------------------------------------------------
 
 --
--- Структура таблиці `Bill`
+-- Table structure for table `Bill`
 --
 
 CREATE TABLE `Bill` (
@@ -37,18 +37,21 @@ CREATE TABLE `Bill` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Дамп даних таблиці `Bill`
+-- Dumping data for table `Bill`
 --
 
 INSERT INTO `Bill` (`bill_number`, `id_employee_bill`, `card_number`, `print_date`, `sum_total`, `vat`) VALUES
-('0000000000', 'c000000001', '0000000000000', '2024-03-10 17:06:53', 1000.0000, 200.0000);
+('0000000000', '0000000001', '0000000000000', '2024-03-10 17:06:53', 111.9500, 22.3900),
+('0000000001', '0000000003', NULL, '2024-03-27 00:57:29', 195.8500, 39.1700),
+('0000000003', '0000000004', NULL, '2024-02-20 09:18:03', 215.4900, 43.0980),
+('0000000004', '0000000001', NULL, '2024-03-25 01:24:06', 64.0000, 12.8000);
 
 --
--- Індекси збережених таблиць
+-- Indexes for dumped tables
 --
 
 --
--- Індекси таблиці `Bill`
+-- Indexes for table `Bill`
 --
 ALTER TABLE `Bill`
   ADD PRIMARY KEY (`bill_number`),
@@ -56,11 +59,11 @@ ALTER TABLE `Bill`
   ADD KEY `id_employee` (`id_employee_bill`);
 
 --
--- Обмеження зовнішнього ключа збережених таблиць
+-- Constraints for dumped tables
 --
 
 --
--- Обмеження зовнішнього ключа таблиці `Bill`
+-- Constraints for table `Bill`
 --
 ALTER TABLE `Bill`
   ADD CONSTRAINT `card_number` FOREIGN KEY (`card_number`) REFERENCES `Customer_Card` (`card_number`) ON UPDATE CASCADE,

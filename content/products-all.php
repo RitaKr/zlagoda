@@ -46,12 +46,12 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                     </option>
                     <?php
                     $stmt = $conn->query("SELECT * FROM Category");
-                    $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                    foreach ($categories as $d):
+                    foreach ($products as $product):
                         ?>
-                        <option value="<?php echo $d['category_number'] ?>" <?= isset ($filters['cat']) && $filters['cat'] == $d['category_number'] ? "selected" : "" ?>>
-                            <?php echo $d['category_name'] ?>
+                        <option value="<?php echo $product['category_number'] ?>" <?= isset ($filters['cat']) && $filters['cat'] == $product['category_number'] ? "selected" : "" ?>>
+                            <?php echo $product['category_name'] ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -91,12 +91,12 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                             <select name="category_number" id="cat">
                                 <?php
                                 $stmt = $conn->query("SELECT * FROM Category ORDER BY category_name");
-                                $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                                foreach ($categories as $d):
+                                foreach ($products as $product):
                                     ?>
-                                    <option value="<?php echo $d['category_number'] ?>">
-                                        <?php echo $d['category_name'] ?>
+                                    <option value="<?php echo $product['category_number'] ?>">
+                                        <?php echo $product['category_name'] ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -130,23 +130,23 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
     }
 
     $sort = $filters['sort'] ? $filters['sort'] : 'product_name';
-    $filter_role = $filters['cat'] ? "WHERE category_number = " . $filters['cat'] : '';
-    $filter_search = $filters['search'] ? ($filter_role ? "AND" : "WHERE") . " product_name LIKE '%" . $filters['search'] . "%'" : '';
+    $filter_cashier = $filters['cat'] ? "WHERE category_number = " . $filters['cat'] : '';
+    $filter_search = $filters['search'] ? ($filter_cashier ? "AND" : "WHERE") . " product_name LIKE '%" . $filters['search'] . "%'" : '';
 
-    $stmt = $conn->prepare("SELECT * FROM Product $filter_role $filter_search ORDER BY $sort");
+    $stmt = $conn->prepare("SELECT * FROM Product $filter_cashier $filter_search ORDER BY $sort");
     $stmt->execute();
-    $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $bills = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($filter_search && count($clients) > 0) {
+    if ($filter_search && count($bills) > 0) {
         if ($filters['cat']) {
             $cat_num = $filters['cat'];
             $stmt = $conn->query("SELECT category_name FROM Category WHERE category_number = $cat_num");
             $cat_name = $stmt->fetch(PDO::FETCH_ASSOC)['category_name'];
         }
-        echo '<div class="banner alert-success">Found ' . count($clients) . ' match' . (count($clients) > 1 ? 'es' : '') . ' for search query "' . $filters['search'] . ($cat_name ? '" in category ' . $cat_name : '"') . '<button class="bi close">🗙</button></div>';
+        echo '<div class="banner alert-success">Found ' . count($bills) . ' match' . (count($bills) > 1 ? 'es' : '') . ' for search query "' . $filters['search'] . ($cat_name ? '" in category ' . $cat_name : '"') . '<button class="bi close">🗙</button></div>';
     }
 
-    if (count($clients) == 0): ?>
+    if (count($bills) == 0): ?>
         <div class="banner alert-danger">Nothing is found</div>
     <?php else: ?>
 
@@ -169,7 +169,7 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                 <tbody>
                     <?php
 
-                    foreach ($clients as $client):
+                    foreach ($bills as $client):
                         $cat_num = $client['category_number'];
                         $stmt = $conn->query("SELECT category_number, category_name FROM Category WHERE category_number = $cat_num");
                         $cat_name = $stmt->fetch(PDO::FETCH_ASSOC)['category_name'];

@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Хост: database
--- Время создания: Мар 23 2024 г., 23:36
--- Версия сервера: 8.3.0
--- Версия PHP: 8.2.8
+-- Host: database
+-- Generation Time: Mar 28, 2024 at 04:37 AM
+-- Server version: 8.3.0
+-- PHP Version: 8.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- База данных: `zlagoda`
+-- Database: `zlagoda`
 --
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `Store_Product`
+-- Table structure for table `Store_Product`
 --
 
 CREATE TABLE `Store_Product` (
@@ -37,27 +37,27 @@ CREATE TABLE `Store_Product` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Дамп данных таблицы `Store_Product`
+-- Dumping data for table `Store_Product`
 --
 
 INSERT INTO `Store_Product` (`UPC`, `UPC_prom`, `id_product`, `selling_price`, `products_number`, `promotional_product`) VALUES
 ('012345678900', NULL, 38, 17.4900, 30, 0),
 ('012345678901', NULL, 25, 14.9900, 42, 0),
 ('012345678902', '12345678910', 37, 32.0000, 28, 1),
-('012345678904', NULL, 36, 27.3000, 26, 0),
 ('012345678907', '12345678912', 23, 12.8000, 30, 1),
 ('012345678908', NULL, 24, 49.3900, 25, 0),
 ('012345678909', NULL, 6, 40.5000, 27, 0),
 ('12345678910', NULL, 37, 40.0000, 9, 0),
 ('12345678911', NULL, 1, 42.0000, 15, 0),
-('12345678912', NULL, 23, 16.0000, 15, 0);
+('12345678912', NULL, 23, 16.0000, 15, 0),
+('12345678913', NULL, 36, 36.0000, 10, 0);
 
 --
--- Индексы сохранённых таблиц
+-- Indexes for dumped tables
 --
 
 --
--- Индексы таблицы `Store_Product`
+-- Indexes for table `Store_Product`
 --
 ALTER TABLE `Store_Product`
   ADD PRIMARY KEY (`UPC`),
@@ -65,11 +65,11 @@ ALTER TABLE `Store_Product`
   ADD KEY `UPC_prom` (`UPC_prom`);
 
 --
--- Ограничения внешнего ключа сохраненных таблиц
+-- Constraints for dumped tables
 --
 
 --
--- Ограничения внешнего ключа таблицы `Store_Product`
+-- Constraints for table `Store_Product`
 --
 ALTER TABLE `Store_Product`
   ADD CONSTRAINT `id_product` FOREIGN KEY (`id_product`) REFERENCES `Product` (`id_product`) ON UPDATE CASCADE,

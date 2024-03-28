@@ -71,22 +71,22 @@
                 <tbody>
                     <?php
 
-                    foreach ($items as $d):
+                    foreach ($items as $product):
                         
                         ?>
 
                         <tr>
                             <td>
-                                <?= $d['category_number'] ?>
+                                <?= $product['category_number'] ?>
                             </td>
                             <td data-key="category_name" data-nn="true">
-                                <?= $d['category_name'] ?>
+                                <?= $product['category_name'] ?>
                             </td>
 
             
                             <?php if (has_role('manager')): ?>
                                 <td>
-                                    <button meta-id="<?= $d['category_number'] ?>" meta-table="Category" meta-key="category_number"
+                                    <button meta-id="<?= $product['category_number'] ?>" meta-table="Category" meta-key="category_number"
                                         class="edit table-btn" aria-roledescription="edit" title="Edit item">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-pencil-fill" viewBox="0 0 16 16">
@@ -95,7 +95,7 @@
                                         </svg>
                                     </button>
                                 </td>
-                                <td><button meta-id="<?= $d['category_number'] ?>" meta-table="Category" meta-key="category_number"
+                                <td><button meta-id="<?= $product['category_number'] ?>" meta-table="Category" meta-key="category_number"
                                         class="delete table-btn" title="Delete item">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-trash-fill" viewBox="0 0 16 16">

@@ -49,10 +49,10 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                     $stmt = $conn->query("SELECT DISTINCT empl_role FROM Employee ORDER BY empl_role");
                     $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                    foreach ($roles as $d):
+                    foreach ($roles as $product):
                         ?>
-                        <option value="<?= $d['empl_role'] ?>" <?= isset ($filters['role']) && $filters['role'] == $d['empl_role'] ? "selected" : "" ?>>
-                            <?= $d['empl_role'] ?>
+                        <option value="<?= $product['empl_role'] ?>" <?= isset ($filters['role']) && $filters['role'] == $product['empl_role'] ? "selected" : "" ?>>
+                            <?= $product['empl_role'] ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -166,20 +166,20 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
     }
 
     $sort = $filters['sort'] ? $filters['sort'] : 'empl_surname';
-    $filter_role = $filters['role'] ? "WHERE empl_role = '" . $filters['role']."'" : '';
-    $filter_search = $filters['search'] ? ($filter_role ? "AND" : "WHERE") . " empl_surname LIKE '%" . $filters['search'] . "%'" : '';
+    $filter_cashier = $filters['role'] ? "WHERE empl_role = '" . $filters['role']."'" : '';
+    $filter_search = $filters['search'] ? ($filter_cashier ? "AND" : "WHERE") . " empl_surname LIKE '%" . $filters['search'] . "%'" : '';
 
     //print_r("SELECT * FROM Employee $filter_role $filter_search ORDER BY $sort");
-    $stmt = $conn->prepare("SELECT * FROM Employee $filter_role $filter_search ORDER BY $sort");
+    $stmt = $conn->prepare("SELECT * FROM Employee $filter_cashier $filter_search ORDER BY $sort");
     $stmt->execute();
-    $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $bills = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($filter_search && count($clients) > 0) {
+    if ($filter_search && count($bills) > 0) {
         
-        echo '<div class="banner alert-success">Found ' . count($clients) . ' match' . (count($clients) > 1 ? 'es' : '') . ' for search query "' . $filters['search'] . (!empty($filters['role']) ? '" with role ' . $filters['role'] : '"') . '<button class="bi close">🗙</button></div>';
+        echo '<div class="banner alert-success">Found ' . count($bills) . ' match' . (count($bills) > 1 ? 'es' : '') . ' for search query "' . $filters['search'] . (!empty($filters['role']) ? '" with role ' . $filters['role'] : '"') . '<button class="bi close">🗙</button></div>';
     }
     $roles = array("cashier"=>"Cashier", "manager"=>"Manager");
-    if (count($clients) == 0): ?>
+    if (count($bills) == 0): ?>
         <div class="banner alert-danger">Nothing is found</div>
     <?php else: ?>
 
@@ -214,7 +214,7 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                 <tbody>
                     <?php
 
-                    foreach ($clients as $client): ?>
+                    foreach ($bills as $client): ?>
 
                         <tr>
                             <td>
