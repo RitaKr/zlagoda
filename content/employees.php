@@ -67,7 +67,7 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
         <section class="control-panel">
 
 
-            <details class="add-form-container">
+            <details class="add-form-container" <?= $_SESSION['detailsOpen'][$currentPage] ?>>
                 <summary class="add-form-opener">
 
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -172,14 +172,14 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
     //print_r("SELECT * FROM Employee $filter_role $filter_search ORDER BY $sort");
     $stmt = $conn->prepare("SELECT * FROM Employee $filter_cashier $filter_search ORDER BY $sort");
     $stmt->execute();
-    $bills = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($filter_search && count($bills) > 0) {
+    if ($filter_search && count($employees) > 0) {
         
-        echo '<div class="banner alert-success">Found ' . count($bills) . ' match' . (count($bills) > 1 ? 'es' : '') . ' for search query "' . $filters['search'] . (!empty($filters['role']) ? '" with role ' . $filters['role'] : '"') . '<button class="bi close">🗙</button></div>';
+        echo '<div class="banner alert-success">Found ' . count($employees) . ' match' . (count($employees) > 1 ? 'es' : '') . ' for search query "' . $filters['search'] . (!empty($filters['role']) ? '" with role ' . $filters['role'] : '"') . '<button class="bi close">🗙</button></div>';
     }
     $roles = array("cashier"=>"Cashier", "manager"=>"Manager");
-    if (count($bills) == 0): ?>
+    if (count($employees) == 0): ?>
         <div class="banner alert-danger">Nothing is found</div>
     <?php else: ?>
 
@@ -214,49 +214,49 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                 <tbody>
                     <?php
 
-                    foreach ($bills as $client): ?>
+                    foreach ($employees as $empl): ?>
 
                         <tr>
                             <td>
-                                <?= $client['id_employee'] ?>
+                                <?= $empl['id_employee'] ?>
                             </td>
                             <td data-key="empl_surname" data-nn="true">
-                                <?= $client['empl_surname'] ?>
+                                <?= $empl['empl_surname'] ?>
                             </td>
                             <td data-key="empl_name" data-nn="true">
-                                <?= $client['empl_name'] ?>
+                                <?= $empl['empl_name'] ?>
                             </td>
                             <td data-key="empl_patronymic">
-                                <?= $client['empl_patronymic'] ?>
+                                <?= $empl['empl_patronymic'] ?>
                             </td>
 
-                            <td data-key="empl_role" data-val="<?= $client['empl_role'] ?>" data-options='<?=json_encode($roles)?>' data-nn="true">
-                                <?= $roles[$client['empl_role']] ?>
+                            <td data-key="empl_role" data-val="<?= $empl['empl_role'] ?>" data-options='<?=json_encode($roles)?>' data-nn="true">
+                                <?= $roles[$empl['empl_role']] ?>
                             </td>
                             <td data-key="salary" data-nn="true" data-type="double">
-                                <?= round($client['salary'], 2) ?>
+                            <span class="decimal"><?= $empl['salary'] ?></span>
                             </td>
                             <td data-key="date_of_start" data-nn="true" data-type="date">
-                                <?= $client['date_of_start'] ?>
+                                <?= $empl['date_of_start'] ?>
                             </td>
                             <td data-key="date_of_birth" data-nn="true" data-type="date" data-max="<?= date('Y-m-d', strtotime('-18 years')) ?>">
-                                <?= $client['date_of_birth'] ?>
+                                <?= $empl['date_of_birth'] ?>
                             </td>
                             <td data-key="phone_number" data-nn="true" data-maxlength="13">
-                                <?= $client['phone_number'] ?>
+                                <?= $empl['phone_number'] ?>
                             </td>
                             <td data-key="city">
-                                <?= $client['city'] ?>
+                                <?= $empl['city'] ?>
                             </td>
                             <td data-key="street">
-                                <?= $client['street'] ?>
+                                <?= $empl['street'] ?>
                             </td>
                             <td data-key="zip_code" data-maxlength="9">
-                                <?= $client['zip_code'] ?>
+                                <?= $empl['zip_code'] ?>
                             </td>
                             
                                 <td>
-                                    <button meta-id="<?= $client['id_employee'] ?>" meta-table="Employee" meta-key="id_employee"
+                                    <button meta-id="<?= $empl['id_employee'] ?>" meta-table="Employee" meta-key="id_employee"
                                         class="edit table-btn" aria-roledescription="edit" title="Edit item">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-pencil-fill" viewBox="0 0 16 16">
@@ -266,7 +266,7 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                                     </button>
                                 </td>
                             
-                                <td><button meta-id="<?= $client['id_employee'] ?>" meta-table="Employee" meta-key="id_employee"
+                                <td><button meta-id="<?= $empl['id_employee'] ?>" meta-table="Employee" meta-key="id_employee"
                                         class="delete table-btn" title="Delete item">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-trash-fill" viewBox="0 0 16 16">

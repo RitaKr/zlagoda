@@ -66,7 +66,7 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
         <section class="control-panel">
 
 
-            <details class="add-form-container">
+            <details class="add-form-container"  <?= $_SESSION['detailsOpen'][$currentPage] ?>>
                 <summary class="add-form-opener">
 
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -190,40 +190,40 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                 <tbody>
                     <?php
 
-                    foreach ($clients as $client): ?>
+                    foreach ($clients as $empl): ?>
 
                         <tr>
                             <td>
-                                <?= $client['card_number'] ?>
+                                <?= $empl['card_number'] ?>
                             </td>
                             <td data-key="cust_surname" data-nn="true">
-                                <?= $client['cust_surname'] ?>
+                                <?= $empl['cust_surname'] ?>
                             </td>
                             <td data-key="cust_name" data-nn="true">
-                                <?= $client['cust_name'] ?>
+                                <?= $empl['cust_name'] ?>
                             </td>
                             <td data-key="cust_patronymic">
-                                <?= $client['cust_patronymic'] ?>
+                                <?= $empl['cust_patronymic'] ?>
                             </td>
 
                             <td data-key="percent" data-type='int' data-min="1" data-max="99"  data-nn="true">
-                                <?= $client['percent'] ?>
+                                <?= $empl['percent'] ?>
                             </td>
                             <td data-key="phone_number" data-nn="true" data-maxlength="13">
-                                <?= $client['phone_number'] ?>
+                                <?= $empl['phone_number'] ?>
                             </td>
                             <td data-key="city">
-                                <?= $client['city'] ?>
+                                <?= $empl['city'] ?>
                             </td>
                             <td data-key="street">
-                                <?= $client['street'] ?>
+                                <?= $empl['street'] ?>
                             </td>
                             <td data-key="zip_code" data-maxlength="9">
-                                <?= $client['zip_code'] ?>
+                                <?= $empl['zip_code'] ?>
                             </td>
                             
                                 <td>
-                                    <button meta-id="<?= $client['card_number'] ?>" meta-table="Customer_Card" meta-key="card_number"
+                                    <button meta-id="<?= $empl['card_number'] ?>" meta-table="Customer_Card" meta-key="card_number"
                                         class="edit table-btn" aria-roledescription="edit" title="Edit item">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-pencil-fill" viewBox="0 0 16 16">
@@ -233,7 +233,7 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                                     </button>
                                 </td>
                             <?php if (has_role('manager')): ?>
-                                <td><button meta-id="<?= $client['card_number'] ?>" meta-table="Customer_Card" meta-key="card_number"
+                                <td><button meta-id="<?= $empl['card_number'] ?>" meta-table="Customer_Card" meta-key="card_number"
                                         class="delete table-btn" title="Delete item">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-trash-fill" viewBox="0 0 16 16">

@@ -5,7 +5,6 @@
 include_once 'functions.php';
 include_once 'db-connection.php';
 
-
 $action = !empty ($_REQUEST['action']) ? $_REQUEST['action'] : '';
 switch ($action) {
     case 'add':
@@ -17,13 +16,97 @@ switch ($action) {
     case 'delete':
         delete_item($conn);
         break;
+    case 'get_product_info':
+        get_product_info_by_UPC($conn);
+        break;
+    case 'get_all_products':
+        $stmt = $conn->prepare("SELECT UPC, product_name, producer, promotional_product FROM Store_Product LEFT JOIN Product ON Store_Product.id_product = Product.id_product ORDER BY product_name");
+        $stmt->execute();
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($items);
+        break;  
+    case 'add-bill':
+        
+    add_bill($conn);
+    break;
+    case 'get_discount_percent':
+        $stmt = $conn->prepare("SELECT percent FROM Customer_Card WHERE card_number = ?");
+        $stmt->execute([$_POST['card_number']]);
+        $discount = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($discount) {
+            echo json_encode($discount["percent"]);
+        } else {
+            echo json_encode(["error" => "No results found"]);
+        }
+        break;
+    case 'update_dialog_open' :
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Update $_SESSION["detailsOpen"]
+        
+        $currentPage = $_POST['currentPage'];
+        $_SESSION['detailsOpen'][$currentPage] = $_POST['detailsOpen'];
+    }
+    break;
+    case 'update_scroll_position' :
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        
+        $currentPage = $_POST['currentPage'];
+        $_SESSION['scrollPosition'][$currentPage] = $_POST['scrollPosition'];
+        echo $_SESSION['scrollPosition'][$currentPage];
+    }
+    break;
     default:
         // include 'list.php';
         break;
 }
 
+function add_bill($conn) {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $bill_num = $_POST['bill_number'];
+        $id_empl = $_POST['id_employee_bill'];
+        $card_number = $_POST['card_number'] ? $_POST['card_number'] : null;
+        $total_price = $_POST['sum_total'];
+        $vat = $_POST['vat'];
+        $date = date('Y-m-d H:i:s');
+        $stmt = $conn->prepare("INSERT INTO Bill (bill_number, id_employee_bill, card_number, print_date, sum_total, vat) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$bill_num, $id_empl, $card_number, $date, $total_price,  $vat]);
+        $inserted = $stmt->rowCount() > 0;
+
+        
+
+        $UPCs = $_POST['UPC'];
+        $product_numbers = $_POST['product_number'];
+        $selling_prices = $_POST['selling_price'];
+        $items_count=0;
+
+        for ($i = 0; $i < count($UPCs); $i++) {
+            $stmt = $conn->prepare("INSERT INTO Sale (UPC, product_number, selling_price, bill_number) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$UPCs[$i], $product_numbers[$i], $selling_prices[$i], $bill_num]);
+            $items_count += $stmt->rowCount();
+
+            // Update products_number in Store_Product
+            $stmt = $conn->prepare("UPDATE Store_Product SET products_number = products_number - ? WHERE UPC = ?");
+            $stmt->execute([$product_numbers[$i], $UPCs[$i]]);
+
+            //Delete product if products_number is 0
+            // $stmt = $conn->prepare("DELETE FROM Store_Product WHERE products_number = 0");
+            // $stmt->execute();
+        }
+        if ($inserted && $items_count==count($UPCs)) {
+            $_SESSION['message'] = 'Bill was added successfully';
+            $_SESSION['message_type'] = 'success';
+        } else {
+            $_SESSION['message'] = 'There was an error inserting the bill';
+            $_SESSION['message_type'] = 'danger';
+        }
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
+    }
+}
 function insert_item($conn)
 {
+    $table_names =array("Store_Product" => "store product", "Product"=>"product", "Bill"=>"bill", "Employee"=>"employee", "Customer_Card"=>"client", "Category"=>"category", "Sale"=>"sale");
+
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // $name = $_POST['p_name'];
         // $cat = $_POST['cat'];
@@ -36,7 +119,7 @@ function insert_item($conn)
         foreach ($_POST as $key => $val) {
             if ($key != "table") {
                 array_push($keys, $key);
-                array_push($values, "'".str_replace("'", "&#39;", $val)."'");
+                array_push($values, "'" . str_replace("'", "&#39;", $val) . "'");
 
             }
         }
@@ -62,10 +145,10 @@ function insert_item($conn)
 
 
                 if ($stmt->execute()) {
-                    $_SESSION['message'] = $table_name . ' was added successfully';
+                    $_SESSION['message'] = "The ".$table_names[$table_name] . ' was added successfully';
                     $_SESSION['message_type'] = 'success';
                 } else {
-                    $_SESSION['message'] = 'There was an error inserting the ' . $table_name;
+                    $_SESSION['message'] = 'There was an error inserting the ' . $table_names[$table_name];
                     $_SESSION['message_type'] = 'danger';
                 }
                 header('Location: ' . $_SERVER['HTTP_REFERER']);
@@ -76,10 +159,10 @@ function insert_item($conn)
                     //first adding products with new price, they will be non-promotional
                     $stmt = $conn->prepare("INSERT INTO $table_name ($keysStr) VALUES ($valuesStr)");
                     if ($stmt->execute()) {
-                        $_SESSION['message'] = $table_name . ' was added successfully';
+                        $_SESSION['message'] = 'The '.$table_names[$table_name] . ' was added successfully';
                         $_SESSION['message_type'] = 'success';
                     } else {
-                        $_SESSION['message'] = 'There was an error inserting the ' . $table_name;
+                        $_SESSION['message'] = 'There was an error inserting the ' . $table_names[$table_name] ;
                         $_SESSION['message_type'] = 'danger';
                     }
 
@@ -121,10 +204,10 @@ function insert_item($conn)
             $stmt = $conn->prepare("INSERT INTO $table_name ($keysStr) VALUES ($valuesStr)");
 
             if ($stmt->execute()) {
-                $_SESSION['message'] = $table_name . ' was added successfully';
+                $_SESSION['message'] = 'The '. $table_names[$table_name] . ' was added successfully';
                 $_SESSION['message_type'] = 'success';
             } else {
-                $_SESSION['message'] = 'There was an error inserting the ' . $table_name;
+                $_SESSION['message'] = 'There was an error inserting the ' . $table_names[$table_name];
                 $_SESSION['message_type'] = 'danger';
             }
             header('Location: ' . $_SERVER['HTTP_REFERER']);
@@ -152,6 +235,8 @@ function insert_item($conn)
 
 function edit_item($conn)
 {
+    $table_names =array("Store_Product" => "store product", "Product"=>"product", "Bill"=>"bill", "Employee"=>"employee", "Customer_Card"=>"client", "Category"=>"category", "Sale"=>"sale");
+
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $id = $_POST['id'];
         $key_name = $_POST['key'];
@@ -171,17 +256,17 @@ function edit_item($conn)
         $set = rtrim($set, ', ');
         //var_dump($set);
         if (isset ($_POST["products_number"]) && $_POST["products_number"] == '0') {
-            delete_item($conn);
+            //delete_item($conn);
         } else {
             $stmt = $conn->prepare("UPDATE $table_name SET $set WHERE $key_name = :id");
             $stmt->bindParam(':id', $id);
 
 
             if ($stmt->execute()) {
-                $_SESSION['message'] = $table_name . ' was updated successfully';
+                $_SESSION['message'] = 'The '. $table_names[$table_name] . ' was updated successfully';
                 $_SESSION['message_type'] = 'success';
             } else {
-                $_SESSION['message'] = 'There was an error updating the ' . $table_name;
+                $_SESSION['message'] = 'There was an error updating the ' . $table_names[$table_name];
                 $_SESSION['message_type'] = 'danger';
             }
 
@@ -194,6 +279,8 @@ function edit_item($conn)
 }
 function delete_item($conn)
 {
+    $table_names =array("Store_Product" => "store product", "Product"=>"product", "Bill"=>"bill", "Employee"=>"employee", "Customer_Card"=>"client", "Category"=>"category", "Sale"=>"sale");
+
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $id = $_POST['id'];
         $key_name = $_POST['key'];
@@ -204,15 +291,35 @@ function delete_item($conn)
 
         $stmt = $conn->prepare("DELETE FROM $table_name WHERE $key_name = :id");
         $stmt->bindParam(':id', $id);
-
+        if ($stmt->rowCount() == 0) {
+            $_SESSION['message'] = 'The '. $table_names[$table_name] . ' was not deleted for integrity reasons';
+            $_SESSION['message_type'] = 'warning';
+        }
         if ($stmt->execute()) {
-            $_SESSION['message'] = 'Deleted successfully!';
+            $_SESSION['message'] = 'The '. $table_names[$table_name] .' was deleted successfully!';
             $_SESSION['message_type'] = 'success';
         } else {
-            $_SESSION['message'] = 'There was an error while deletion';
+            $_SESSION['message'] = 'There was an error while deleting '. $table_names[$table_name];
             $_SESSION['message_type'] = 'danger';
         }
-
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
     }
 
+}
+
+function get_product_info_by_UPC($conn)
+{
+    $selected_upc = $_POST['UPC'];
+    $stmt = $conn->prepare("SELECT products_number, selling_price FROM Store_Product WHERE UPC = ?");
+    $stmt->execute([$selected_upc]);
+
+    // Fetch the data
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($row) {
+        echo json_encode($row);
+    } else {
+        echo json_encode(["error" => "No results found"]);
+    }
 }

@@ -80,7 +80,7 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
         <section class="control-panel">
 
 
-            <details class="add-form-container">
+            <details class="add-form-container" <?= $_SESSION['detailsOpen'][$currentPage] ?>>
                 <summary class="add-form-opener">
 
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -169,18 +169,18 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
     //print_r("SELECT * FROM Store_Product LEFT JOIN Product ON Store_Product.id_product = Product.id_product $promo ORDER BY $sort");
     $stmt = $conn->prepare("SELECT * FROM Store_Product LEFT JOIN Product ON Store_Product.id_product = Product.id_product $filter_cashier $filter_search $date_from ORDER BY $sort");
     $stmt->execute();
-    $bills = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($filter_search && count($bills) > 0) {
+    if ($filter_search && count($employees) > 0) {
         if ($filters['cat']) {
             $cat_num = $filters['cat'];
             $stmt = $conn->query("SELECT category_name FROM Category WHERE category_number = $cat_num");
             $cat_name = $stmt->fetch(PDO::FETCH_ASSOC)['category_name'];
         }
-        echo '<div class="banner alert-success">Found ' . count($bills) . ' match' . (count($bills) > 1 ? 'es' : '') . ' for search query "' . $filters['search'] . ($cat_name ? '" in category ' . $cat_name : '"') . '<button class="bi close">🗙</button></div>';
+        echo '<div class="banner alert-success">Found ' . count($employees) . ' match' . (count($employees) > 1 ? 'es' : '') . ' for search query "' . $filters['search'] . ($cat_name ? '" in category ' . $cat_name : '"') . '<button class="bi close">🗙</button></div>';
     }
 
-    if (count($bills) == 0): ?>
+    if (count($employees) == 0): ?>
         <div class="banner alert-danger">Nothing is found</div>
     <?php else: ?>
 
@@ -205,8 +205,8 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                 <tbody>
                     <?php
 
-                    foreach ($bills as $client):
-                        $p_id = $client['id_product'];
+                    foreach ($employees as $empl):
+                        $p_id = $empl['id_product'];
 
                         $stmt = $conn->query("SELECT id_product AS id, product_name AS item_name, (SELECT category_name FROM Category WHERE Category.category_number = Product.category_number) AS category_name, producer, characteristics FROM Product");
                         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -222,7 +222,7 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                         // echo '</code><br>';
                 
 
-                        $cat_num = $client['category_number'];
+                        $cat_num = $empl['category_number'];
                         $stmt = $conn->query("SELECT category_number, category_name FROM Category WHERE category_number = $cat_num");
                         $cat_name = $stmt->fetch(PDO::FETCH_ASSOC)['category_name'];
 
@@ -236,39 +236,39 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
 
                         <tr>
                             <td>
-                                <?= $client['UPC'] ?>
+                                <?= $empl['UPC'] ?>
                             </td>
                             <!-- <td data-key="id_product" data-val="<?//= $p_id ?>" data-fk='<?//= $p_array ?>'> -->
                             <td>
-                                <?= $client['product_name']; ?>
+                                <?= $empl['product_name']; ?>
                             </td>
 
                             <td data-info>
                                 <?= $cat_name; ?>
                             </td>
                             <td data-info>
-                                <?= $client['producer'] ?>
+                                <?= $empl['producer'] ?>
                             </td>
                             <td data-info>
-                                <?= $client['characteristics']; ?>
+                                <?= $empl['characteristics']; ?>
                             </td>
                             <td data-key="selling_price" data-nn="true" data-type="double">
-                                <?= round($client['selling_price'], 2) ?>
+                            <span class="decimal"><?= $empl['selling_price']?></span>
                             </td>
                             <td data-key="products_number" data-nn="true" data-type="int">
-                                <?= $client['products_number'] ?>
+                                <?= $empl['products_number'] ?>
                             </td>
                             <!-- <td data-key="promotional_product" data-nn="true" data-options='<?//= json_encode($boolValues)  ?>'>
                                 <?//=$boolValues[$product['promotional_product']]  ?>
                             </td> -->
 
                             <td>
-                                <?= $boolValues[$client['promotional_product']] ?>
+                                <?= $boolValues[$empl['promotional_product']] ?>
                             </td>
 
                             <?php if (has_role('manager')): ?>
                                 <td>
-                                    <button meta-id="<?= $client['UPC'] ?>" meta-table="Store_Product" meta-key="UPC"
+                                    <button meta-id="<?= $empl['UPC'] ?>" meta-table="Store_Product" meta-key="UPC"
                                         class="edit table-btn" aria-roledescription="edit" title="Edit item">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-pencil-fill" viewBox="0 0 16 16">
@@ -277,7 +277,7 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                                         </svg>
                                     </button>
                                 </td>
-                                <td><button meta-id="<?= $client['UPC'] ?>" meta-table="Store_Product" meta-key="UPC"
+                                <td><button meta-id="<?= $empl['UPC'] ?>" meta-table="Store_Product" meta-key="UPC"
                                         class="delete table-btn" title="Delete item">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-trash-fill" viewBox="0 0 16 16">

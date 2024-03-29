@@ -17,6 +17,9 @@ if (has_role('cashier') && $_SERVER['PHP_SELF'] == '/employees.php') {
     header('Location: ' . $_SERVER['HTTP_REFERER']);
     exit;
 }
+$currentPage = basename($_SERVER['SCRIPT_NAME']);
+$filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersData'][$currentPage] : array();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -74,12 +77,12 @@ if (has_role('cashier') && $_SERVER['PHP_SELF'] == '/employees.php') {
             </ul>
         </nav>
         <div class="menu-right">
-            <a href="<? ROOT_PATH ?>/search.php" class="search">
+            <!-- <a href="<? ROOT_PATH ?>/search.php" class="search">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                     <path
                         d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
                 </svg>
-            </a>
+            </a> -->
             <?php if (!is_logged_in()): ?>
                 <div class="signin-switch">
                     <a href="<? ROOT_PATH ?>/signup.php" target="" <?php echo ($_SERVER['PHP_SELF'] == '/signup.php') ? 'class="active"' : ''; ?>>Sign up</a>
@@ -88,7 +91,10 @@ if (has_role('cashier') && $_SERVER['PHP_SELF'] == '/employees.php') {
 
             <?php else: ?>
                 <a href="<? ROOT_PATH ?>/account.php" alt="My account" title="My account" target="" class="my-account">
-
+                    <div>
+                        <p class="login"><?= $_SESSION["user_login"]?></p>
+                        <p class="role"><?= $_SESSION["role"]?></p>
+                    </div>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-person-circle"
                         viewBox="0 0 16 16">
                         <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
@@ -100,5 +106,9 @@ if (has_role('cashier') && $_SERVER['PHP_SELF'] == '/employees.php') {
 
         </div>
     </header>
+    <script>
+    var currentPage = "<?php echo $currentPage;?>";
+    var scrollPosition = <?php echo $_SESSION['scrollPosition'][$currentPage]? $_SESSION['scrollPosition'][$currentPage] : 0; ?>;
+</script>
 
     <!-- Your main content -->
