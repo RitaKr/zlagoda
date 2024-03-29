@@ -172,8 +172,8 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                         <th rowspan="2">Discount, %</th>
                         <th rowspan="2">Phone number</th>
                         <th colspan="3">Address</th>
-                        <th rowspan="2"></th>
-                        <?php if (has_role('manager')): ?><th rowspan="2"></th><?php endif; ?>
+                        <th rowspan="2" class="empty"></th>
+                        <?php if (has_role('manager')): ?><th rowspan="2" class="empty"></th><?php endif; ?>
                     </tr>
                     <tr>
                         

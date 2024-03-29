@@ -197,8 +197,8 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                         <th>Number of items</th>
                         <th>Promotional</th>
                         <?php if (has_role('manager')): ?>
-                        <th></th>
-                        <th></th>
+                        <th class="empty"></th>
+                        <th class="empty"></th>
                         <?php endif; ?>
                     </tr>
                 </thead>

@@ -259,13 +259,17 @@ $(document).ready(function () {
 	$(".print").click(function () {
 		var clone = $(".content-table").clone(); // clone the table
 		clone.find("td:has(button)").remove(); // remove td's that contain a button
+        clone.find("th.empty").remove(); 
 		var printContents = $("<div>").append(clone).html(); // get the outer html of the cloned table
 		var originalContents = document.body.innerHTML;
 
 		document.body.innerHTML =
 			`<style type="text/css" media="print">
-        @media print {
             
+        @media print {
+            .content-table thead {
+                top: 0;
+            }
             @page {
                 
                 margin-bottom: 0;

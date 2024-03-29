@@ -455,6 +455,9 @@ p {
 	background: none;
 
 	border: 2px solid $invalid;
+	
+	overflow-x: auto;
+	max-width: 100%;
 	.bi {
 		color: $invalid;
 	}
@@ -666,10 +669,10 @@ p {
 		}
 	}
 }
-// #edit-form {
-// 	display: flex;
-// 	justify-content: center;
-// }
+ #edit-form {
+max-width: 90vw;
+
+}
 @media print {
 	body {
 		background: none;
@@ -1037,6 +1040,124 @@ p {
 			background: $gray2;
 			color: white;
 			font-weight: 500;
+		}
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.main-wrap {
+		width: 100%;
+		padding: 20px;
+	}
+	.grid-menu {
+		grid-template-columns: repeat(2,150px);
+		grid-template-rows: auto;
+		gap: 20px;
+		a {
+			height: 150px;
+		}
+	}
+	.products-menu {
+		flex-direction: column;
+		gap: 20px;
+		a {
+			height: fit-content;
+			min-height: fit-content;
+			padding: 20px 0;
+			width: 100%;
+			max-width: 100%;
+		}
+	
+	}
+	.control-panel {
+		flex-direction: column;
+		gap: 20px;
+	
+	}
+	.filters-form {
+		flex-direction: column;
+		width: 100%;
+		fieldset, label {
+			width: 100%;
+		}
+		label {
+			justify-content: space-between;
+		}
+		.date-filter {
+			flex-direction: column;
+			gap: 10px;
+		}
+		.search-fieldset {
+			width: 100%
+		}
+	}
+	.add-form-container, .add-form-container:has(.totals-panel) {
+		min-width: 100%;
+		.totals-form {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 10px;
+			select {
+				width: 100%;
+			}
+		}
+		.add-form {
+			fieldset {
+				flex-direction: column;
+			}
+			select  {
+				width: 100%;
+				option {
+					width: 100%;
+					text-wrap: wrap;
+				}
+			}
+		}
+	}
+	.mainheader {
+		height: fit-content;
+		flex-direction: column;
+		gap: 10px;
+		padding: 10px 0;
+		position: relative;
+		.mainmenu {
+			width: 100%;
+			ul {
+				flex-direction: column;
+				gap: 10px;
+			}
+		}
+	}
+	.footer {
+		.footer-links {
+		flex-direction: column;
+		gap: 10px;
+		margin-bottom: 20px;
+	}
+	.mainmenu {
+		width: 100%;
+		ul {
+			flex-wrap: wrap;
+			justify-content: flex-start;
+			row-gap: 5px;
+		}
+	}
+}
+	#edit-form {
+		width: 100%;
+		max-width: 100%;
+		overflow-x: auto;
+		position: unset;
+	}
+	.content-table {
+		overflow-x: auto;
+		width: 100%;
+		max-width: 100%;
+		position: unset;
+
+		thead {
+			position: sticky;
+			top: 00px;
 		}
 	}
 }

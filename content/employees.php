@@ -196,8 +196,8 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                         <th rowspan="2">Date of birth</th>
                         <th rowspan="2">Phone number</th>
                         <th colspan="3">Address</th>
-                        <th rowspan="2"></th>
-                        <th rowspan="2"></th>
+                        <th rowspan="2" class="empty"></th>
+                        <th rowspan="2" class="empty"></th>
                     </tr>
                     <tr>
                         
