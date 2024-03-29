@@ -51,7 +51,7 @@ p {
 	.signin-switch {
 		border-radius: 30px;
 		display: flex;
-		background: $gray2;
+		background: $blue2;
 		a {
 			flex-grow: 1;
 			display: inline-block;
@@ -67,7 +67,7 @@ p {
 				padding-left: 10px;
 			}
 			&.active {
-				background: $gray;
+				background: $blue;
 				padding: 10px 15px;
 			}
 		}
@@ -99,7 +99,7 @@ p {
 				color: $hovercol;
 			}
 			.bi {
-				background: $gray2;
+				background: $blue2;
 				color: $hovercol;
 			}
 		}
@@ -153,7 +153,7 @@ p {
 		top: 100%;
 		width: fit-content;
 		left: 50%;
-		background: $gray;
+		background: $blue;
 		border-radius: 0 0 10px 10px;
 		height: fit-content;
 		z-index: 10;
@@ -253,7 +253,7 @@ p {
 		font-size: 1.2rem;
 
 		&:hover {
-			background: $gray2;
+			background: $blue2;
 			color: white;
 			transform: scale(1.05);
 			box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
@@ -277,7 +277,7 @@ p {
 	margin: 0 auto;
 	gap: 10px;
 	a {
-		background: $gray2;
+		background: $blue2;
 		color: white;
 		display: flex;
 		flex-direction: column;
@@ -290,7 +290,7 @@ p {
 		transition: all 0.4s ease;
 
 		&:hover {
-			background: $gray;
+			background: $blue;
 			transform: scale(1.04);
 			box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
 		}
@@ -315,7 +315,7 @@ p {
 		align-items: center;
 		padding: 10px 20px;
 		flex-shrink: 0;
-		background: $gray;
+		background: $blue;
 		gap: 20px;
 	}
 	select {
@@ -350,19 +350,19 @@ p {
 		}
 	}
 	.category-filter {
-		background: $gray2;
+		background: $blue2;
 	}
 	.promo-filter,
 	.date-filter {
-		background: darken($gray2, 10%);
+		background: darken($blue2, 10%);
 		color: white;
 	}
 }
 
 .content-table {
-	border: 2px solid $gray2;
+	border: 2px solid $blue2;
 	border-collapse: collapse;
-	background: darken($gray2, 40%);
+	background: darken($blue2, 40%);
 	thead {
 		color: white;
 		text-align: center;
@@ -371,41 +371,41 @@ p {
 		background: inherit;
 		tr {
 			.shade1 {
-				background: $gray;
+				background: $blue;
 			}
 			.shade2 {
-				background: $gray2;
+				background: $blue2;
 			}
 			.shade3 {
-				background: darken($gray2, 10%);
+				background: darken($blue2, 10%);
 			}
 			.shade4 {
-				background: darken($gray2, 20%);
+				background: darken($blue2, 20%);
 			}
 			.shade5 {
-				background: darken($gray2, 30%);
+				background: darken($blue2, 30%);
 			}
 			.shade6 {
-				background: darken($gray2, 40%);
+				background: darken($blue2, 40%);
 			}
 			&:first-child {
 				:nth-child(1) {
-					background: $gray;
+					background: $blue;
 				}
 				:nth-child(2) {
-					background: $gray2;
+					background: $blue2;
 				}
 				:nth-child(3) {
-					background: darken($gray2, 10%);
+					background: darken($blue2, 10%);
 				}
 				:nth-child(4) {
-					background: darken($gray2, 20%);
+					background: darken($blue2, 20%);
 				}
 				:nth-child(5) {
-					background: darken($gray2, 30%);
+					background: darken($blue2, 30%);
 				}
 				:nth-child(6) {
-					background: darken($gray2, 40%);
+					background: darken($blue2, 40%);
 				}
 			}
 		}
@@ -416,8 +416,8 @@ p {
 		padding: 10px;
 	}
 	td {
-		border-left: 2px solid $gray2;
-		border-right: 2px solid $gray2;
+		border-left: 2px solid $blue2;
+		border-right: 2px solid $blue2;
 		background: white;
 		transition: all $transition;
 	}
@@ -512,7 +512,7 @@ p {
 	font-size: 1rem;
 
 	&:hover {
-		background: $gray2;
+		background: $blue2;
 	}
 }
 
@@ -529,7 +529,7 @@ p {
 		border-radius: 8px;
 		overflow: hidden;
 		.add-form-opener {
-			background: $gray2;
+			background: $blue2;
 			color: white;
 			.bi {
 				transform: rotate(90deg);
@@ -542,9 +542,9 @@ p {
 		align-items: center;
 		padding: 10px;
 		gap: 10px;
-		color: $gray2;
+		color: $blue2;
 		border-radius: 8px 8px 0 0;
-		border-bottom: 4px solid $gray2;
+		border-bottom: 4px solid $blue2;
 
 		cursor: pointer;
 		transition: all $transition;
@@ -552,7 +552,7 @@ p {
 			color: inherit;
 		}
 		&:hover {
-			background: $gray2;
+			background: $blue2;
 			color: white;
 			.bi {
 				color: inherit;
@@ -587,7 +587,7 @@ p {
 			}
 			legend {
 				color: white;
-				background: $gray2;
+				background: $blue2;
 				padding: 0 10px;
 				border-radius: 5px;
 				font-weight: 500;
@@ -661,11 +661,11 @@ p {
 		top: 8px;
 		right: 8px;
 		cursor: pointer;
-		color: $gray;
+		color: $blue;
 		background: none;
 		border: none;
 		&:hover {
-			color: $gray2;
+			color: $blue2;
 		}
 	}
 }
@@ -678,7 +678,7 @@ max-width: 90vw;
 		background: none;
 	}
 	th {
-		border: 2px solid $gray2;
+		border: 2px solid $blue2;
 		color: $textcol !important;
 	}
 }
@@ -966,7 +966,7 @@ max-width: 90vw;
 		}
 		.bill-vat {
 			font-size: 0.8rem;
-			color: $gray2;
+			color: $blue2;
 		}
 	}
 	.bill-items {
@@ -1011,7 +1011,7 @@ max-width: 90vw;
 	width: 100%;
 
 	padding-bottom: 20px;
-	border-bottom: 2px solid $gray2;
+	border-bottom: 2px solid $blue2;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -1037,7 +1037,7 @@ max-width: 90vw;
 			display: inline-block;
 			padding: 3px 6px;
 			border-radius: 5px;
-			background: $gray2;
+			background: $blue2;
 			color: white;
 			font-weight: 500;
 		}
