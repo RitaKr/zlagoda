@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Mar 28, 2024 at 04:37 AM
+-- Generation Time: Mar 29, 2024 at 03:04 AM
 -- Server version: 8.3.0
 -- PHP Version: 8.2.8
 
@@ -41,15 +41,15 @@ CREATE TABLE `Product` (
 
 INSERT INTO `Product` (`id_product`, `category_number`, `product_name`, `producer`, `characteristics`) VALUES
 (1, 2, 'Печиво Oreo', 'Mondelez International', 'Шоколадне печиво з молочною начинкою'),
-(6, 6, 'Сік Садочок виноград-яблуко', 'Sandora', 'Виноградно-яблучний сік, 1л'),
+(6, 6, 'Сік Садочок виноград-яблуко 1л', 'Sandora', 'Виноградно-яблучний сік, 1л'),
 (23, 1, 'Сирок глазурований', 'Чудо', 'Сирок глазурований з карамельною начинкою, 100г'),
-(24, 6, 'Сік Садочок апельсин', 'Sandora', 'Апельсиновий сік, 1л'),
+(24, 6, 'Сік Садочок апельсин 1л', 'Sandora', 'Апельсиновий сік, 1л'),
 (25, 7, 'Lion', 'Nestle', 'шоколадний батончик з карамеллю'),
 (36, 1, 'Молоко', 'Яготинське', '1л пастеризованого молока, 2% жирності'),
 (37, 1, 'Кефір', 'Слов\'яночка', 'Кефір 5% жирності'),
 (38, 2, 'Barni шоколадний', 'Nestle', 'Бісквітний батончик з шоколадною начинкою'),
-(51, 7, 'Снікерс', 'Nestle', 'Шоколадний батончик з карамеллю'),
-(52, 1, 'Молоко', 'Слов&#39;яночка', '1л пастеризованого молока, 1.5% жирності');
+(52, 1, 'Молоко', 'Слов&#39;яночка', '1л пастеризованого молока, 1.5% жирності'),
+(53, 6, 'Fanta 0.5л', 'Sandora', 'Газований напій зі смаком апельсину, 0.5л');
 
 --
 -- Indexes for dumped tables
@@ -70,7 +70,7 @@ ALTER TABLE `Product`
 -- AUTO_INCREMENT for table `Product`
 --
 ALTER TABLE `Product`
-  MODIFY `id_product` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id_product` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- Constraints for dumped tables
