@@ -2,36 +2,47 @@
 <?
 ?>
 <main class="main-wrap">
-    <h1>My account</h1>
-    <p>Logged in as:
-        <?php echo $_SESSION["user_login"] ?> (<?php echo $_SESSION["role"] ?>)
-    </p>
-    <h2>My information</h2>
-    <?php
-    $id = $_SESSION["user_id"];
-    $stmt = $conn->prepare("SELECT * FROM Employee WHERE id_employee = :id");
-    $stmt->bindParam(':id', $id);
-    $stmt->execute(); 
-    $empl = $stmt->fetch(PDO::FETCH_ASSOC);
-    ?>
-    <h3>Full name</h3>
-    <p><?php echo get_full_name($empl)?></p>
 
-    <h3>Role</h3>
-    <p><?php echo $empl["empl_role"]?></p>
+        <h1>MY ACCOUNT</h1>
+        <div class="container">
+        <?php
+        $id = $_SESSION["user_id"];
+        $stmt = $conn->prepare("SELECT * FROM Employee WHERE id_employee = :id");
+        $stmt->bindParam(':id', $id);
+        $stmt->execute(); 
+        $empl = $stmt->fetch(PDO::FETCH_ASSOC);
+        ?>
+        <div>
+            <h3>Full name</h3>
+            <p><?php echo get_full_name($empl)?></p>
+        </div>
 
-    <h3>Phone number</h3>
-    <p><?php echo $empl["phone_number"]?></p>
-
-    <h3>Date of Birth</h3>
-    <p><?php echo $empl["date_of_birth"]?></p>
-
-    <h3>Date of start</h3>
-    <p><?php echo $empl["date_of_start"]?></p>
-
-    <h3>Address</h3>
-    <p><?php echo $empl["city"]?>, <?php echo $empl["street"]?>, <?php echo $empl["zip_code"]?></p>
-
+        <div>
+            <h3>Role</h3>
+            <p><?php echo ucwords($empl["empl_role"])?></p>
+        </div>
+    
+        <div>
+            <h3>Address</h3>
+            <p><?php echo $empl["city"]?>, <?php echo $empl["street"]?>, <?php echo $empl["zip_code"]?></p>
+        </div>
+    
+        <div>
+            <h3>Phone number</h3>
+            <p><?php echo $empl["phone_number"]?></p>
+        </div>
+    
+        <div>
+            <h3>Date of Birth</h3>
+            <p><?php echo $empl["date_of_birth"]?></p>
+        </div>
+    
+        <div>
+            <h3>Date of start</h3>
+            <p><?php echo $empl["date_of_start"]?></p>
+        </div>
+    
+    </div>
     <form action="signout.php" method="post">
         <button type="submit" name="signout" class="btn-primary">Sign Out</button>
     </form>

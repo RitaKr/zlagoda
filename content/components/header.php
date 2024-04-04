@@ -51,38 +51,30 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
         <nav class="mainmenu">
             <ul>
                 <?php if (has_role('manager')): ?>
-
-                    <li>
+                    <li class="<?= $_SERVER['PHP_SELF'] == '/employees.php' ? 'active' : '' ?>">
                         <a href="<? ROOT_PATH ?>/employees.php" target="">Employees</a>
                     </li>
                 <?php endif; ?>
 
-                <li>
+                <li class="<?= $_SERVER['PHP_SELF'] == '/bills.php' ? 'active' : '' ?>">
                     <a href="<? ROOT_PATH ?>/bills.php" target="">Bills</a>
                 </li>
-                <li>
+                <li class="<?= $_SERVER['PHP_SELF'] == '/clients.php' ? 'active' : '' ?>">
                     <a href="<? ROOT_PATH ?>/clients.php" target="">Clients</a>
                 </li>
-                <li>
+                <li class="<?= $_SERVER['PHP_SELF'] == '/products.php' || $_SERVER['PHP_SELF'] == '/products-all.php' || $_SERVER['PHP_SELF'] == '/products-store.php' ? 'active' : '' ?>">
                     <a href="<? ROOT_PATH ?>/products.php" target="">Products</a>
                     <ul class="submenu">
-                        <li><a href="<? ROOT_PATH ?>/products-all.php" target="">All</a></li>
-                        <li><a href="<? ROOT_PATH ?>/products-store.php" target="">In Store</a></li>
+                        <li class="<?=$_SERVER['PHP_SELF'] == '/products-all.php' ? 'active' : '' ?>"><a href="<? ROOT_PATH ?>/products-all.php" target="">All</a></li>
+                        <li class="<?= $_SERVER['PHP_SELF'] == '/products-store.php' ? 'active' : '' ?>"><a href="<? ROOT_PATH ?>/products-store.php" target="">In Store</a></li>
                     </ul>
                 </li>
-                <li>
+                <li class="<?= $_SERVER['PHP_SELF'] == '/categories.php' ? 'active' : '' ?>">
                     <a href="<? ROOT_PATH ?>/categories.php" target="">Categories</a>
                 </li>
-
             </ul>
         </nav>
         <div class="menu-right">
-            <!-- <a href="<? ROOT_PATH ?>/search.php" class="search">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                    <path
-                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                </svg>
-            </a> -->
             <?php if (!is_logged_in()): ?>
                 <div class="signin-switch">
                     <a href="<? ROOT_PATH ?>/signup.php" target="" <?php echo ($_SERVER['PHP_SELF'] == '/signup.php') ? 'class="active"' : ''; ?>>Sign up</a>
@@ -90,7 +82,7 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                 </div>
 
             <?php else: ?>
-                <a href="<? ROOT_PATH ?>/account.php" alt="My account" title="My account" target="" class="my-account">
+                <a href="<? ROOT_PATH ?>/account.php" alt="My account" title="My account" target="" class="my-account <?= $_SERVER['PHP_SELF'] == '/account.php' ? 'active' : '' ?>">
                     <div>
                         <p class="login"><?= $_SESSION["user_login"]?></p>
                         <p class="role"><?= $_SESSION["role"]?></p>

@@ -26,11 +26,19 @@ input[type="submit"],
 }
 a,
 .bi {
-	color: $linkcol;
 	text-decoration: none;
 	transition: all $transition;
+}
+a {
+	color: $linkcol;
 	&:hover {
 		color: $hovercol;
+	}
+}
+.bi {
+	color: $textcol;
+	&:hover {
+		color: $textcol1;
 	}
 }
 p {
@@ -93,7 +101,9 @@ p {
 		p {
 			text-align: right;
 			transition: 0.3s all ease;
+			color: $linkcol;
 		}
+		&.active,
 		&:hover {
 			p {
 				color: $hovercol;
@@ -114,14 +124,15 @@ p {
 			height: 40px;
 			width: 40px;
 			border-radius: 100%;
-
 		}
 	}
 }
 
 .mainmenu {
 	background: inherit;
-
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
 	height: 100%;
 	ul {
 		display: flex;
@@ -137,6 +148,9 @@ p {
 		position: relative;
 
 		height: 100%;
+		&.active > a {
+			color: $hovercol;
+		}
 	}
 	a {
 		font-weight: 500;
@@ -153,12 +167,24 @@ p {
 		top: 100%;
 		width: fit-content;
 		left: 50%;
-		background: $blue;
+		background: lighten($bg2, 15%);
+		
 		border-radius: 0 0 10px 10px;
 		height: fit-content;
 		z-index: 10;
 		gap: 0;
 		padding: 1rem 0;
+
+		&::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			pointer-events: none;
+			width: 100%;
+			height: 2rem;
+			background: linear-gradient(to bottom, rgba($bg2, 0.4), transparent);
+		}
 		li {
 			padding: 0 1rem;
 			a {
@@ -167,7 +193,7 @@ p {
 			}
 		}
 		li:first-child {
-			border-right: 2px solid $bg2;
+			border-right: 2px solid $bg;
 		}
 	}
 
@@ -180,10 +206,11 @@ p {
 .logo {
 	display: flex;
 	flex-wrap: nowrap;
+	gap: 10px;
 	h2 {
 		font-weight: 300;
 		font-size: 2rem;
-		color: $textcol;
+		color: $linkcol;
 	}
 }
 .footer {
@@ -201,6 +228,12 @@ p {
 		justify-content: space-between;
 		align-items: center;
 		width: 100%;
+		position: relative;
+
+	}
+
+	p {
+		color: $textcol1;
 	}
 }
 
@@ -212,6 +245,7 @@ p {
 	font-size: 1rem;
 	transition: all $transition;
 	border: 2px solid $primary;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
 	&:not(:disabled):hover {
 		background: $primary-hover;
@@ -253,7 +287,7 @@ p {
 		font-size: 1.2rem;
 
 		&:hover {
-			background: $blue2;
+			background: $blue;
 			color: white;
 			transform: scale(1.05);
 			box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
@@ -310,6 +344,7 @@ p {
 .filters-form {
 	display: flex;
 	justify-content: flex-start;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 	label {
 		display: flex;
 		align-items: center;
@@ -317,6 +352,7 @@ p {
 		flex-shrink: 0;
 		background: $blue;
 		gap: 20px;
+		color: white;
 	}
 	select {
 		background: $bg;
@@ -344,6 +380,7 @@ p {
 			outline: none;
 			padding: 5px 10px;
 			.bi {
+				color: #000;
 				width: 20px;
 				height: 20px;
 			}
@@ -362,50 +399,67 @@ p {
 .content-table {
 	border: 2px solid $blue2;
 	border-collapse: collapse;
-	background: darken($blue2, 40%);
+	background: darken($blue, 40%);
 	thead {
+		background: inherit;
 		color: white;
 		text-align: center;
 		position: sticky;
 		top: 69px;
 		background: inherit;
+		
 		tr {
 			.shade1 {
 				background: $blue;
 			}
 			.shade2 {
-				background: $blue2;
+				background: darken($blue, 5%);
 			}
 			.shade3 {
-				background: darken($blue2, 10%);
+				background: darken($blue, 10%);
 			}
 			.shade4 {
-				background: darken($blue2, 20%);
+				background: darken($blue, 15%);
 			}
 			.shade5 {
-				background: darken($blue2, 30%);
+				background: darken($blue, 20%);
 			}
 			.shade6 {
-				background: darken($blue2, 40%);
+				background: darken($blue, 25%);
+			}
+			.shade7 {
+				background: darken($blue, 30%);
+			}
+			.shade8 {
+				background: darken($blue, 35%);
 			}
 			&:first-child {
 				:nth-child(1) {
 					background: $blue;
 				}
 				:nth-child(2) {
-					background: $blue2;
+					background: darken($blue, 5%);
 				}
 				:nth-child(3) {
-					background: darken($blue2, 10%);
+					background: darken($blue, 10%);
 				}
 				:nth-child(4) {
-					background: darken($blue2, 20%);
+					background: darken($blue, 15%);
 				}
 				:nth-child(5) {
-					background: darken($blue2, 30%);
+					background: darken($blue, 20%);
 				}
 				:nth-child(6) {
-					background: darken($blue2, 40%);
+					background: darken($blue, 25%);
+				}
+				:nth-child(7) {
+					background: darken($blue, 30%);
+				}
+				:nth-child(8) {
+					background: darken($blue, 35%);
+				}
+				:nth-child(9) {
+					background: darken($blue, 40%);
 				}
 			}
 		}
@@ -455,7 +509,7 @@ p {
 	background: none;
 
 	border: 2px solid $invalid;
-	
+
 	overflow-x: auto;
 	max-width: 100%;
 	.bi {
@@ -510,9 +564,10 @@ p {
 	color: white;
 	border: none;
 	font-size: 1rem;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
 	&:hover {
-		background: $blue2;
+		background: $blue;
 	}
 }
 
@@ -525,7 +580,7 @@ p {
 		min-width: 400px;
 	}
 	&[open] {
-		background: $bg2;
+		background: $blue;
 		border-radius: 8px;
 		overflow: hidden;
 		.add-form-opener {
@@ -563,7 +618,7 @@ p {
 
 	.add-form {
 		padding: 20px;
-
+		color: $textcol1;
 		display: flex;
 		flex-direction: column;
 		gap: 20px;
@@ -606,6 +661,7 @@ p {
 			height: 100%;
 			flex-grow: 1;
 			font-weight: 600;
+			color: $textcol1;
 
 			&.inline {
 				flex-direction: row;
@@ -624,6 +680,12 @@ p {
 			padding: 10px;
 			margin-top: 5px;
 			resize: none;
+			background: lighten($blue, 20%);
+			color: $textcol1;
+			&::placeholder {
+				color: $textcol1;
+				opacity: 0.6;
+			}
 		}
 		span:has(output) {
 			padding: 10px 0;
@@ -669,19 +731,10 @@ p {
 		}
 	}
 }
- #edit-form {
-max-width: 90vw;
+#edit-form {
+	max-width: 90vw;
+}
 
-}
-@media print {
-	body {
-		background: none;
-	}
-	th {
-		border: 2px solid $blue2;
-		color: $textcol !important;
-	}
-}
 .bills-container {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -712,8 +765,8 @@ max-width: 90vw;
 		top: -5px;
 		left: 0;
 		width: 100%;
-		height: 5px; // Adjust this to change the size of the zigzag
-		background: white; // Adjust this to match the background color of the .bill element
+		height: 5px; 
+		background: white; 
 		// clip-path: polygon(0% 100%, 2% 0%, 4% 100%, 6% 0%, 8% 100%, 10% 0%, 12% 100%, 14% 0%, 16% 100%, 18% 0%, 20% 100%, 22% 0%, 24% 100%, 26% 0%, 28% 100%, 30% 0%, 32% 100%, 34% 0%, 36% 100%, 38% 0%, 40% 100%, 42% 0%, 44% 100%, 46% 0%, 48% 100%, 50% 0%, 52% 100%, 54% 0%, 56% 100%, 58% 0%, 60% 100%, 62% 0%, 64% 100%, 66% 0%, 68% 100%, 70% 0%, 72% 100%, 74% 0%, 76% 100%, 78% 0%, 80% 100%, 82% 0%, 84% 100%, 86% 0%, 88% 100%, 90% 0%, 92% 100%, 94% 0%, 96% 100%, 98% 0%, 100% 100%);
 		clip-path: polygon(
 			0% 100%,
@@ -826,8 +879,8 @@ max-width: 90vw;
 		bottom: -5px;
 		left: 0;
 		width: 100%;
-		height: 5px; // Adjust this to change the size of the zigzag
-		background: white; // Adjust this to match the background color of the .bill element
+		height: 5px; 
+		background: white; 
 		// clip-path: polygon(
 		// 	0% 0%, 2% 100%, 4% 0%, 6% 100%, 8% 0%, 10% 100%, 12% 0%, 14% 100%, 16% 0%, 18% 100%,
 		// 	20% 0%, 22% 100%, 24% 0%, 26% 100%, 28% 0%, 30% 100%, 32% 0%, 34% 100%, 36% 0%, 38% 100%,
@@ -998,9 +1051,10 @@ max-width: 90vw;
 }
 .totals-panel {
 	width: 100%;
-	background: $bg2;
+	background: $blue;
 	padding: 20px;
 	border-radius: 8px;
+	color: $textcol1;
 	h2 {
 		text-align: center;
 		text-transform: uppercase;
@@ -1050,7 +1104,7 @@ max-width: 90vw;
 		padding: 20px;
 	}
 	.grid-menu {
-		grid-template-columns: repeat(2,150px);
+		grid-template-columns: repeat(2, 150px);
 		grid-template-rows: auto;
 		gap: 20px;
 		a {
@@ -1067,17 +1121,16 @@ max-width: 90vw;
 			width: 100%;
 			max-width: 100%;
 		}
-	
 	}
 	.control-panel {
 		flex-direction: column;
 		gap: 20px;
-	
 	}
 	.filters-form {
 		flex-direction: column;
 		width: 100%;
-		fieldset, label {
+		fieldset,
+		label {
 			width: 100%;
 		}
 		label {
@@ -1088,10 +1141,11 @@ max-width: 90vw;
 			gap: 10px;
 		}
 		.search-fieldset {
-			width: 100%
+			width: 100%;
 		}
 	}
-	.add-form-container, .add-form-container:has(.totals-panel) {
+	.add-form-container,
+	.add-form-container:has(.totals-panel) {
 		min-width: 100%;
 		.totals-form {
 			flex-direction: column;
@@ -1105,7 +1159,7 @@ max-width: 90vw;
 			fieldset {
 				flex-direction: column;
 			}
-			select  {
+			select {
 				width: 100%;
 				option {
 					width: 100%;
@@ -1113,6 +1167,11 @@ max-width: 90vw;
 				}
 			}
 		}
+	}
+	.mainmenu {
+		position: relative;
+		left: 0;
+		transform: none;
 	}
 	.mainheader {
 		height: fit-content;
@@ -1130,19 +1189,19 @@ max-width: 90vw;
 	}
 	.footer {
 		.footer-links {
-		flex-direction: column;
-		gap: 10px;
-		margin-bottom: 20px;
-	}
-	.mainmenu {
-		width: 100%;
-		ul {
-			flex-wrap: wrap;
-			justify-content: flex-start;
-			row-gap: 5px;
+			flex-direction: column;
+			gap: 10px;
+			margin-bottom: 20px;
+		}
+		.mainmenu {
+			width: 100%;
+			ul {
+				flex-wrap: wrap;
+				justify-content: flex-start;
+				row-gap: 5px;
+			}
 		}
 	}
-}
 	#edit-form {
 		width: 100%;
 		max-width: 100%;
@@ -1159,5 +1218,22 @@ max-width: 90vw;
 			position: sticky;
 			top: 00px;
 		}
+	}
+}
+.container {
+	background: white;
+	margin: 20px 0;
+	padding: 20px;
+	color: $textcol;
+	width: 500px;
+	max-width: 100%;
+	border-radius: 8px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+
+	h2,
+	p {
+		width: fit-content;
 	}
 }

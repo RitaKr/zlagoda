@@ -1,7 +1,6 @@
 <footer class="footer">
     <div class="footer-links">
         <a href="<? ROOT_PATH ?>/index.php" target="" class="logo">
-            <img src="<? ROOT_PATH ?>/assets/img/logo.svg" alt="Zlagoda AIS logo">
             <h2>ZLAGODA</h2>
         </a>
         <nav class="mainmenu">
@@ -26,6 +25,7 @@
 
             </ul>
         </nav>
+        
     </div>
 
     <p>&copy;

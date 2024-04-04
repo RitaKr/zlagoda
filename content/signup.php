@@ -1,94 +1,97 @@
 <?php include 'components/header.php'; ?>
 
 <section class="login-wrap">
-<div class="login-container">
-    <form action="<? ROOT_PATH ?>/signup-handle.php" method="POST" class="login-form " id="signup-form">
-        <h1>Sign up</h1>
-        
-        
+    <div class="login-container">
+        <form action="<? ROOT_PATH ?>/signup-handle.php" method="POST" class="login-form " id="signup-form">
+            <h1>Sign up</h1>
 
-        <select name="id" id="">
-            <optgroup label="Managers">
-                <?php
-                $stmt = $conn->query("SELECT id_employee, empl_surname, empl_name, empl_patronymic, empl_role FROM Employee WHERE empl_role = 'manager' 
+
+            <label for="id">
+                <span>Name Surname</span>
+                <select name="id" id="id">
+                    <optgroup label="Managers">
+                        <?php
+                        $stmt = $conn->query("SELECT id_employee, empl_surname, empl_name, empl_patronymic, empl_role FROM Employee WHERE empl_role = 'manager' 
                     AND NOT EXISTS (
                         SELECT 1 
                         FROM User 
                         WHERE User.id_employee = Employee.id_employee
                     ) ORDER BY empl_surname");
-                $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
-                foreach ($employees as $empl):
-                    $empl_id = $empl['id_employee'];
-                    $empl_name = get_full_name($empl);
-                    $empl_role = 'manager';
-                    ?>
+                        foreach ($employees as $empl):
+                            $empl_id = $empl['id_employee'];
+                            $empl_name = get_full_name($empl);
+                            $empl_role = 'manager';
+                            ?>
 
-                    <option value="<?php echo $empl_id ?>">
-                        <?php echo $empl_name ?>
-                    </option>
+                            <option value="<?php echo $empl_id ?>">
+                                <?php echo $empl_name ?>
+                            </option>
 
-                <?php endforeach; ?>
-            </optgroup>
+                        <?php endforeach; ?>
+                    </optgroup>
 
-            <optgroup label="Cashiers">
-                <?php
-                $stmt = $conn->query("SELECT id_employee, empl_surname, empl_name, empl_patronymic, empl_role FROM Employee WHERE empl_role = 'cashier' 
+                    <optgroup label="Cashiers">
+                        <?php
+                        $stmt = $conn->query("SELECT id_employee, empl_surname, empl_name, empl_patronymic, empl_role FROM Employee WHERE empl_role = 'cashier' 
                     AND NOT EXISTS (
                         SELECT 1 
                         FROM User 
                         WHERE User.id_employee = Employee.id_employee
                     ) ORDER BY empl_surname");
-                $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
-                foreach ($employees as $empl):
-                    $empl_id = $empl['id_employee'];
-                    $empl_name = get_full_name($empl);
-                    $empl_role = 'cahier';
-                    ?>
+                        foreach ($employees as $empl):
+                            $empl_id = $empl['id_employee'];
+                            $empl_name = get_full_name($empl);
+                            $empl_role = 'cahier';
+                            ?>
 
-                    <option value="<?php echo $empl_id ?>">
-                        <?php echo $empl_name ?>
-                    </option>
+                            <option value="<?php echo $empl_id ?>">
+                                <?php echo $empl_name ?>
+                            </option>
 
-                <?php endforeach; ?>
-            </optgroup>
-        </select>
-        <label for="username">
-            <span>Username</span>
-            <input type="text" name="username" id="username" placeholder="Create unique username">
-            <div class="alert username-alert">
-            <p>User with this username already exists!</p>
-        </div>
-        </label>
+                        <?php endforeach; ?>
+                    </optgroup>
+                </select>
+            </label>
 
-        <label for="password">
-            <span>Password</span>
-            <input type="password" name="password" id="password" placeholder="Create password">
-            <div class="alert pass-alert">
-            <p>Password is too weak!</p>
-        </div>
-        <p class="notice">
-            Password must contain at least: 
-            <br>
-            At least 6 characters 
-            <br>
-            One uppercase letter 
-            <br>
-            One number
-        </p>
-        </label>
-        
-        <button type="submit" id="signup-btn" class="btn-primary" disabled>Sign up</button>
+            <label for="username">
+                <span>Username</span>
+                <input type="text" name="username" id="username" placeholder="Create unique username">
+                <div class="alert username-alert">
+                    <p>User with this username already exists!</p>
+                </div>
+            </label>
 
-    </form>
-    <p class="other-signin">Already have an account? <a href="<? ROOT_PATH ?>/signin.php">Sign in</a></p>
+            <label for="password">
+                <span>Password</span>
+                <input type="password" name="password" id="password" placeholder="Create password">
+                <div class="alert pass-alert">
+                    <p>Password is too weak!</p>
+                </div>
+                <p class="notice">
+                    Password must contain at least:
+                    <br>
+                    8 characters
+                    <br>
+                    One latin letter
+                    <br>
+                    One number
+                </p>
+            </label>
 
-</div>
+            <button type="submit" id="signup-btn" class="btn-primary" disabled>Sign up</button>
+
+        </form>
+        <p class="other-signin">Already have an account? <a href="<? ROOT_PATH ?>/signin.php">Sign in</a></p>
+
+    </div>
 </section>
 
 
@@ -177,4 +180,6 @@
         }
     }
 </script>
-<?php include 'components/footer.php'; ?>
+</body>
+
+</html>

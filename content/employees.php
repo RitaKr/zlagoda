@@ -206,9 +206,9 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                         <th class="shade2">Patronymic</th>
                         
                         
-                        <th >City</th>
-                        <th >Street</th>
-                        <th >Zip-code</th>
+                        <th class="shade8">City</th>
+                        <th class="shade8">Street</th>
+                        <th class="shade8">Zip-code</th>
                     </tr>
                 </thead>
                 <tbody>

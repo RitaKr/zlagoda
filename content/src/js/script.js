@@ -264,12 +264,30 @@ $(document).ready(function () {
 		var originalContents = document.body.innerHTML;
 
 		document.body.innerHTML =
-			`<style type="text/css" media="print">
+			`<style type="text/css" >
+            body {
+                background: none;
+            }
             
-        @media print {
+            .content-table {
+                border: none !important;
+            }
+            
             .content-table thead {
                 top: 0;
+                position: relative;
+                
             }
+            .content-table td {
+                border-bottom: 1px black solid;
+            }
+            .content-table thead th {
+                border: 2px solid black !important;
+                background: gray !important;
+                color: black !important;
+            }
+        @media print {
+            
             @page {
                 
                 margin-bottom: 0;
