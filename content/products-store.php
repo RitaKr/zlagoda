@@ -101,7 +101,7 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                             <span>Product <span class="red">*</span></span>
                             <select name="id_product" id="p_id">
                                 <?php
-                                $stmt = $conn->query("SELECT * FROM Product WHERE Product.id_product NOT IN (SELECT Store_Product.id_product FROM Store_Product WHERE promotional_product = 1) ORDER BY product_name");
+                                $stmt = $conn->query("SELECT product_name, producer FROM Product WHERE Product.id_product NOT IN (SELECT Store_Product.id_product FROM Store_Product WHERE promotional_product = 1) ORDER BY product_name");
                                 $all_products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                 foreach ($all_products as $pr):
@@ -164,10 +164,9 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
     $sort = $filters['sort'] ? $filters['sort'] : 'product_name';
     $filter_cashier = $filters['cat'] ? "WHERE category_number = " . $filters['cat'] : '';
     $filter_search = $filters['search'] ? ($filter_cashier ? "AND" : "WHERE") . " product_name LIKE '%" . $filters['search'] . "%' OR UPC LIKE '%" . $filters['search'] . "%'" : '';
-    $date_from = $filters['promo'] == "0" || $filters['promo'] == "1" ? ($filter_search || $filter_cashier ? "AND" : "WHERE") . " promotional_product = " . $filters['promo'] : '';
-    //print_r($filters);
-    //print_r("SELECT * FROM Store_Product LEFT JOIN Product ON Store_Product.id_product = Product.id_product $promo ORDER BY $sort");
-    $stmt = $conn->prepare("SELECT * FROM Store_Product LEFT JOIN Product ON Store_Product.id_product = Product.id_product $filter_cashier $filter_search $date_from ORDER BY $sort");
+    $promo_filter = $filters['promo'] == "0" || $filters['promo'] == "1" ? ($filter_search || $filter_cashier ? "AND" : "WHERE") . " promotional_product = " . $filters['promo'] : '';
+
+    $stmt = $conn->prepare("SELECT * FROM Store_Product LEFT JOIN Product ON Store_Product.id_product = Product.id_product $filter_cashier $filter_search $promo_filter ORDER BY $sort");
     $stmt->execute();
     $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

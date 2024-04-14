@@ -11,12 +11,7 @@
                 <select name="id" id="id">
                     <optgroup label="Managers">
                         <?php
-                        $stmt = $conn->query("SELECT id_employee, empl_surname, empl_name, empl_patronymic, empl_role FROM Employee WHERE empl_role = 'manager' 
-                    AND NOT EXISTS (
-                        SELECT 1 
-                        FROM User 
-                        WHERE User.id_employee = Employee.id_employee
-                    ) ORDER BY empl_surname");
+                        $stmt = $conn->query("SELECT id_employee, empl_surname, empl_name, empl_patronymic, empl_role FROM Employee WHERE empl_role = 'manager' AND id_employee NOT IN (SELECT User.id_employee FROM User) ORDER BY empl_surname");
                         $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
@@ -27,8 +22,8 @@
                             $empl_role = 'manager';
                             ?>
 
-                            <option value="<?php echo $empl_id ?>">
-                                <?php echo $empl_name ?>
+                            <option value="<?= $empl_id ?>">
+                                <?= $empl_name ?>
                             </option>
 
                         <?php endforeach; ?>
@@ -36,12 +31,7 @@
 
                     <optgroup label="Cashiers">
                         <?php
-                        $stmt = $conn->query("SELECT id_employee, empl_surname, empl_name, empl_patronymic, empl_role FROM Employee WHERE empl_role = 'cashier' 
-                    AND NOT EXISTS (
-                        SELECT 1 
-                        FROM User 
-                        WHERE User.id_employee = Employee.id_employee
-                    ) ORDER BY empl_surname");
+                        $stmt = $conn->query("SELECT id_employee, empl_surname, empl_name, empl_patronymic, empl_role FROM Employee WHERE empl_role = 'cashier' AND id_employee NOT IN (SELECT User.id_employee FROM User) ORDER BY empl_surname");
                         $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 

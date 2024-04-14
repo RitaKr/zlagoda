@@ -92,13 +92,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </section>
     <?php
     $sort = $filters['sort'] ? $filters['sort'] : 'print_date';
-    
+    $date_from = $filters['date-from'] ? date('Y-m-d', strtotime($filters['date-from'])) : date('Y-m-d', strtotime('2020-01-01'));
+    $date_to = $filters['date-from'] ? date('Y-m-d', strtotime($filters['date-to'])) : date('Y-m-d');
 
-    $date_from = $filters['date-from'] ?  "WHERE print_date >= '" . date('Y-m-d', strtotime($filters['date-from'])) . "'" : '';
-    $date_to = $filters['date-to'] ? ($date_from  ? "AND" : "WHERE") . " print_date <= '" . date('Y-m-d', strtotime($filters['date-to'])) . "'" : '';
-    $filter_cashier = $filters['cashier'] ? ($date_from || $date_to ? "AND" : "WHERE") ." id_employee_bill = " . $filters['cashier'] : (has_role("cashier") ? 'WHERE id_employee_bill = ' . $_SESSION["user_id"] : '');
+    $date_from_filter = $filters['date-from'] ?  "WHERE print_date >= '" . $date_from . "'" : '';
+    $date_to_filter = $filters['date-to'] ? ($date_from_filter  ? "AND" : "WHERE") . " print_date <= '" . $date_to . "'" : '';
+    $filter_cashier = $filters['cashier'] ? ($date_from_filter || $date_to_filter ? "AND" : "WHERE") ." id_employee_bill = " . $filters['cashier'] : (has_role("cashier") ? 'WHERE id_employee_bill = ' . $_SESSION["user_id"] : '');
 
-    $filter_search = $filters['search'] ? ($filter_cashier || $date_from || $date_to ? "AND" : "WHERE") . " Bill.bill_number LIKE '%" . $filters['search'] . "%'" : '';
+    $filter_search = $filters['search'] ? ($filter_cashier || $date_from_filter || $date_to_filter ? "AND" : "WHERE") . " Bill.bill_number LIKE '%" . $filters['search'] . "%'" : '';
     ?>
 
     <section class="control-panel">
@@ -236,16 +237,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         if ($filters['id_product']):
                             $id_product = $filters['id_product'];
     
-                            $stmt = $conn->query("SELECT SUM(Sale.selling_price * Sale.product_number) AS total_income, SUM(Sale.selling_price * Sale.product_number * percent * 0.01) AS total_discount, SUM(Sale.product_number) AS total_quantity FROM (Sale LEFT JOIN Bill ON Bill.bill_number = Sale.bill_number) LEFT JOIN Customer_Card ON Customer_Card.card_number = Bill.card_number $date_from $date_to AND UPC IN (SELECT UPC FROM Store_Product WHERE id_product = $id_product) ");
     
+                            $stmt = $conn->prepare("SELECT SUM(S.selling_price * S.product_number) AS total_income, SUM(S.selling_price * S.product_number * CC.percent * 0.01) AS total_discount, SUM(S.product_number) AS total_quantity FROM  ((Sale S LEFT JOIN  Bill B ON B.bill_number = S.bill_number) LEFT JOIN Customer_Card CC ON CC.card_number = B.card_number) LEFT JOIN  Store_Product SP ON SP.UPC = S.UPC WHERE B.print_date >= :date_from_param AND B.print_date <= :date_to_param AND SP.id_product =  :id_product_param GROUP BY S.UPC");
+                            $stmt->bindParam(':date_from_param',  $date_from);
+                            $stmt->bindParam(':date_to_param',  $date_to);
+                            $stmt->bindParam(':id_product_param', $id_product);
+                            $stmt->execute();
+
                             $product_totals = $stmt->fetch(PDO::FETCH_ASSOC);
-                            //print_r($product_totals);
                     
                             ?>
     
     
                             <h3>Total number of items sold: <span>
-                                    <?= $product_totals["total_quantity"] ? $product_totals["total_quantity"] : 0 ?>
+                                    <?= intval($product_totals["total_quantity"]) ?>
                                 </span></h3>
                             <h3>Total income: <span>
                             <span class="decimal"><?= doubleval($product_totals["total_income"]) - doubleval($product_totals["total_discount"]) ?></span> UAH
@@ -255,13 +260,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </span></h3>
     
                         <?php else:
-    
-                            $stmt = $conn->query("SELECT SUM(product_number) as total_quantity, SUM(sum_total) as total_income,  SUM(vat) as total_vat FROM ((Sale LEFT JOIN Bill ON Sale.bill_number = Bill.bill_number) LEFT JOIN Employee ON Employee.id_employee = Bill.id_employee_bill) LEFT JOIN Customer_Card ON Customer_Card.card_number = Bill.card_number $date_from $date_to $filter_cashier ");
+                            if ($filters['cashier']){
+                            $stmt = $conn->prepare("SELECT SUM(product_number) as total_quantity, SUM(sum_total) as total_income,  SUM(vat) as total_vat FROM (Sale AS S LEFT JOIN Bill AS B ON S.bill_number = B.bill_number) LEFT JOIN Employee ON Employee.id_employee = B.id_employee_bill WHERE B.print_date >= :date_from_param AND B.print_date <= :date_to_param AND B.id_employee_bill = :id_employee_param GROUP BY B.id_employee_bill");
+                            $stmt->bindParam(':id_employee_param', $filters['cashier']);
+
+                            } else {
+                                $stmt = $conn->prepare("SELECT SUM(product_number) as total_quantity, SUM(sum_total) as total_income,  SUM(vat) as total_vat FROM Sale AS S LEFT JOIN Bill AS B ON S.bill_number = B.bill_number WHERE B.print_date >= :date_from_param AND B.print_date <= :date_to_param");
+                            }
+                            $stmt->bindParam(':date_from_param',  $date_from);
+                            $stmt->bindParam(':date_to_param',  $date_to);
+                            $stmt->execute();
                             $totals = $stmt->fetch(PDO::FETCH_ASSOC);
-                            ?>
+                         ?>
     
                             <h3>Total number of items sold: <span>
-                                    <?= $totals["total_quantity"] ?>
+                                    <?= intval($totals["total_quantity"]) ?>
                                 </span></h3>
                             <h3>Total income: <span>
                             <span class="decimal"><?= doubleval($totals["total_income"]) ?></span> UAH
@@ -295,14 +308,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     
-    $stmt = $conn->prepare("SELECT Bill.bill_number, Bill.card_number, print_date, vat, sum_total, empl_surname, empl_name, percent FROM (Bill LEFT JOIN Employee ON Employee.id_employee = Bill.id_employee_bill)  LEFT JOIN Customer_Card ON Customer_Card.card_number = Bill.card_number  $date_from $date_to $filter_cashier $filter_search ORDER BY $sort");
+    $stmt = $conn->prepare("SELECT Bill.bill_number, Bill.card_number, print_date, vat, sum_total, empl_surname, empl_name, percent FROM (Bill LEFT JOIN Employee ON Employee.id_employee = Bill.id_employee_bill)  LEFT JOIN Customer_Card ON Customer_Card.card_number = Bill.card_number  $date_from_filter $date_to_filter $filter_cashier $filter_search ORDER BY $sort");
     $stmt->execute();
     $bills = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($filter_search && count($bills) > 0) {
         if ($filters['cashier']) {
+            //var_dump($filters['cashier']);
             $empl_id = $filters['cashier'];
-            $stmt = $conn->query("SELECT JOIN empl_surname, empl_name FROM Employee WHERE id_employee = $empl_id");
+            $stmt = $conn->query("SELECT empl_surname, empl_name FROM Employee WHERE id_employee = $empl_id");
             $empl = $stmt->fetch(PDO::FETCH_ASSOC);
         }
         echo '<div class="banner alert-success">Found ' . count($bills) . ' match' . (count($bills) > 1 ? 'es' : '') . ' for search query "' . $filters['search'] . ($empl ? '" from cashier ' . $empl["empl_surname"] . ' ' . $empl["empl_name"] : '"') . '<button class="bi close">🗙</button></div>';
