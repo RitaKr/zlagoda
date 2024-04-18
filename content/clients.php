@@ -27,7 +27,7 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                     </svg>
                 </button>
                 <input type="search" name="search" placeholder="Search for clients by their surname"
-                    value="<?= $filters['search'] ? $filters['search'] : '' ?>">
+                    value="<?= $filters['search'] !=="" ? $filters['search'] : '' ?>">
             </fieldset>
 
             <label for="sort" class="sort-filter">
@@ -147,15 +147,18 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
 
     $sort = $filters['sort'] ? $filters['sort'] : 'cust_surname';
     $filter_role = $filters['discount'] ? "WHERE percent = " . $filters['discount'] : '';
-    $filter_search = $filters['search'] ? ($filter_role ? "AND" : "WHERE") . " cust_surname LIKE '%" . $filters['search'] . "%'" : '';
+    $filter_search = $filters['search'] !=="" ? ($filter_role ? "AND" : "WHERE") . " cust_surname LIKE '%" . $filters['search'] . "%'" : '';
 
     $stmt = $conn->prepare("SELECT * FROM Customer_Card $filter_role $filter_search ORDER BY $sort");
     $stmt->execute();
     $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($filter_search && count($clients) > 0) {
-        
-        echo '<div class="banner alert-success">Found ' . count($clients) . ' match' . (count($clients) > 1 ? 'es' : '') . ' for search query "' . $filters['search'] . (!empty($filters['discount']) ? '" with discount ' . $filters['discount'] : '"') . '<button class="bi close">🗙</button></div>';
+    if (count($clients) > 0) {
+        echo '<div class="banner alert-success">
+        Found ' . count($clients) . 
+        ($filter_search ? ' match'.(count($clients) > 1 ? 'es' : '').' for search query "' . $filters['search'].'"' :' client'.(count($clients) > 1 ? 's' : '')). 
+        (!empty($filters['discount']) ? ' with discount ' . $filters['discount'].'%' : '') . 
+        '<button class="bi close">🗙</button></div>';
     }
 
     if (count($clients) == 0): ?>

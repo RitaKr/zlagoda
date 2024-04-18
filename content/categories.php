@@ -55,6 +55,7 @@
     if (count($items) == 0): ?>
         <div class="banner alert-danger">Nothing is found</div>
     <?php else: ?>
+        <div class="banner alert-success"> Found <?=count($items)?> categories <button class="bi close">🗙</button></div>
 
         <form action="actions.php?action=edit" method="post" id="edit-form">
             <table class="content-table">

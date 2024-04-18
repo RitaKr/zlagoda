@@ -27,7 +27,7 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                     </svg>
                 </button>
                 <input type="search" name="search" placeholder="Search for products by their name"
-                    value="<?= $filters['search'] ? $filters['search'] : '' ?>">
+                    value="<?= $filters['search'] !=="" ? $filters['search'] : '' ?>">
             </fieldset>
 
             <label for="sort" class="sort-filter">
@@ -131,22 +131,26 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
 
     $sort = $filters['sort'] ? $filters['sort'] : 'product_name';
     $filter_cashier = $filters['cat'] ? "WHERE category_number = " . $filters['cat'] : '';
-    $filter_search = $filters['search'] ? ($filter_cashier ? "AND" : "WHERE") . " product_name LIKE '%" . $filters['search'] . "%'" : '';
+    $filter_search = $filters['search'] !=="" ? ($filter_cashier ? "AND" : "WHERE") . " product_name LIKE '%" . $filters['search'] . "%'" : '';
 
     $stmt = $conn->prepare("SELECT * FROM Product $filter_cashier $filter_search ORDER BY $sort");
     $stmt->execute();
-    $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($filter_search && count($employees) > 0) {
+    if (count($products) > 0) {
         if ($filters['cat']) {
             $cat_num = $filters['cat'];
             $stmt = $conn->query("SELECT category_name FROM Category WHERE category_number = $cat_num");
             $cat_name = $stmt->fetch(PDO::FETCH_ASSOC)['category_name'];
         }
-        echo '<div class="banner alert-success">Found ' . count($employees) . ' match' . (count($employees) > 1 ? 'es' : '') . ' for search query "' . $filters['search'] . ($cat_name ? '" in category ' . $cat_name : '"') . '<button class="bi close">🗙</button></div>';
+        echo '<div class="banner alert-success">
+        Found ' . count($products) . 
+        ($filter_search ? ' match'.(count($products) > 1 ? 'es' : '').' for search query "' . $filters['search'].'"' :' item'.(count($products) > 1 ? 's' : '')). 
+        ($cat_name ? ' in category ' . $cat_name : '') . 
+        '<button class="bi close">🗙</button></div>';
     }
 
-    if (count($employees) == 0): ?>
+    if (count($products) == 0): ?>
         <div class="banner alert-danger">Nothing is found</div>
     <?php else: ?>
 
@@ -169,7 +173,7 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                 <tbody>
                     <?php
 
-                    foreach ($employees as $empl):
+                    foreach ($products as $empl):
                         $cat_num = $empl['category_number'];
                         $stmt = $conn->query("SELECT category_number, category_name FROM Category WHERE category_number = $cat_num");
                         $cat_name = $stmt->fetch(PDO::FETCH_ASSOC)['category_name'];

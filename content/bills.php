@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </svg>
                 </button>
                 <input type="search" name="search" placeholder="Search for bill by its number"
-                    value="<?= $filters['search'] ? $filters['search'] : '' ?>">
+                    value="<?= $filters['search'] !=="" ? $filters['search'] : '' ?>">
             </fieldset>
 
             <label for="sort" class="sort-filter">
@@ -99,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $date_to_filter = $filters['date-to'] ? ($date_from_filter  ? "AND" : "WHERE") . " print_date <= '" . $date_to . "'" : '';
     $filter_cashier = $filters['cashier'] ? ($date_from_filter || $date_to_filter ? "AND" : "WHERE") ." id_employee_bill = " . $filters['cashier'] : (has_role("cashier") ? 'WHERE id_employee_bill = ' . $_SESSION["user_id"] : '');
 
-    $filter_search = $filters['search'] ? ($filter_cashier || $date_from_filter || $date_to_filter ? "AND" : "WHERE") . " Bill.bill_number LIKE '%" . $filters['search'] . "%'" : '';
+    $filter_search = $filters['search']!==""  ? ($filter_cashier || $date_from_filter || $date_to_filter ? "AND" : "WHERE") . " Bill.bill_number LIKE '%" . $filters['search'] . "%'" : '';
     ?>
 
     <section class="control-panel">
@@ -312,14 +312,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
     $bills = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($filter_search && count($bills) > 0) {
+    if (count($bills) > 0) {
         if ($filters['cashier']) {
             //var_dump($filters['cashier']);
             $empl_id = $filters['cashier'];
             $stmt = $conn->query("SELECT empl_surname, empl_name FROM Employee WHERE id_employee = $empl_id");
             $empl = $stmt->fetch(PDO::FETCH_ASSOC);
         }
-        echo '<div class="banner alert-success">Found ' . count($bills) . ' match' . (count($bills) > 1 ? 'es' : '') . ' for search query "' . $filters['search'] . ($empl ? '" from cashier ' . $empl["empl_surname"] . ' ' . $empl["empl_name"] : '"') . '<button class="bi close">🗙</button></div>';
+        
+        echo '<div class="banner alert-success">
+        Found ' . count($bills) . 
+        ($filter_search ? ' match'.(count($bills) > 1 ? 'es' : '').' for search query "' . $filters['search'].'"' :' bill'.(count($bills) > 1 ? 's' : '')). 
+        ($empl ? ' by cashier ' . $empl["empl_surname"] . ' ' . $empl["empl_name"] : ''). 
+        ($date_from_filter ? ' from ' . $filters['date-from'] :'') . 
+        ($date_to_filter ? ' to '.$filters['date-to'] : ''). 
+        '<button class="bi close">🗙</button></div>';
     }
 
     if (count($bills) == 0): ?>
