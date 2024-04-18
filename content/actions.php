@@ -134,6 +134,7 @@ function insert_item($conn)
 
         if ($table_name == "Store_Product") {
             $id_product = $_POST['id_product'];
+            //var_dump($_POST);
             $stmt = $conn->query("SELECT * FROM Store_Product WHERE id_product = $id_product AND promotional_product = '0'");
             $new_prom = $stmt->fetch(PDO::FETCH_ASSOC);
             // echo '<br>This product but non-promotional: ';
@@ -251,8 +252,9 @@ function edit_item($conn)
         $set = '';
         foreach ($_POST as $key => $value) {
             if ($key != "id" && $key != "key" && $key != "table")
-                $set .= $key . " = '" . $value . "', ";
+                $set .= $key . " = '" . str_replace("'", "&#39;", $value) . "', ";
         }
+        
         $set = rtrim($set, ', ');
         //var_dump($set);
         if (isset ($_POST["products_number"]) && $_POST["products_number"] == '0') {

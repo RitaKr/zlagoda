@@ -101,7 +101,7 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                             <span>Product <span class="red">*</span></span>
                             <select name="id_product" id="p_id">
                                 <?php
-                                $stmt = $conn->query("SELECT product_name, producer FROM Product WHERE Product.id_product NOT IN (SELECT Store_Product.id_product FROM Store_Product WHERE promotional_product = 1) ORDER BY product_name");
+                                $stmt = $conn->query("SELECT * FROM Product WHERE Product.id_product NOT IN (SELECT Store_Product.id_product FROM Store_Product WHERE promotional_product = 1) ORDER BY product_name");
                                 $all_products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                 foreach ($all_products as $pr):
