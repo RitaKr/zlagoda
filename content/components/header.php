@@ -2,6 +2,7 @@
 define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT']);
 include_once ROOT_PATH . '/functions.php';
 include_once ROOT_PATH . '/db-connection.php';
+create_all_tables();
 // Check if the requested file exists
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {

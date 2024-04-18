@@ -718,6 +718,11 @@ p {
 		color: #72521c;
 		border: 1px solid #ffeaa5;
 	}
+	&.alert-info {
+		background: #d1eeff;
+		color: #1c4372;
+		border: 1px solid #a5cdff;
+	}
 	.close {
 		position: absolute;
 		top: 8px;

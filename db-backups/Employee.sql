@@ -6,10 +6,10 @@
 -- Generation Time: Mar 03, 2024 at 11:16 PM
 -- Server version: 8.3.0
 -- PHP Version: 8.2.8
-
+USE zlagoda;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
-SET time_zone = "+00:00";
+SET time_zone = "+03:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -32,7 +32,7 @@ CREATE TABLE `Employee` (
   `empl_surname` varchar(50) NOT NULL,
   `empl_name` varchar(50) NOT NULL,
   `empl_patronymic` varchar(50) DEFAULT NULL,
-  `empl_role` enum('manager','cashier') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `empl_role` varchar(10) NOT NULL DEFAULT 'cashier',
   `salary` decimal(13,4) NOT NULL,
   `date_of_birth` date NOT NULL,
   `date_of_start` date NOT NULL,

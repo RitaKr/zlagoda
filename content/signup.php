@@ -2,7 +2,7 @@
 
 <section class="login-wrap">
     <div class="login-container">
-        <form action="<? ROOT_PATH ?>/signup-handle.php" method="POST" class="login-form " id="signup-form">
+        <form action="<? ROOT_PATH ?>/actions.php?action=signup" method="POST" class="login-form " id="signup-form">
             <h1>Sign up</h1>
 
 
@@ -152,14 +152,15 @@
         validateForm();
 
     });
-    passInput.addEventListener("input", () => {
+    passInput.addEventListener("input", (e) => {
+        console.log(e.currentTarget.value);
         validatePassword();
         validateForm();
 
     });
     function validateForm() {
         if (validPassword() && validUsername()) {
-            console.log("all good");
+            //console.log("all good");
             form.classList.remove('invalid-pass');
             form.classList.remove('invalid-username');
             submitBtn.disabled = false;

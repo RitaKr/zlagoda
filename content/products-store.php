@@ -163,7 +163,7 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
 
     $sort = $filters['sort'] ? $filters['sort'] : 'product_name';
     $filter_cashier = $filters['cat'] ? "WHERE category_number = " . $filters['cat'] : '';
-    $filter_search = $filters['search']!=="" ? ($filter_cashier ? "AND" : "WHERE") . " product_name LIKE '%" . $filters['search'] . "%' OR UPC LIKE '%" . $filters['search'] . "%'" : '';
+    $filter_search = isset($filters['search']) && $filters['search']!=="" ? ($filter_cashier ? "AND" : "WHERE") . " product_name LIKE '%" . $filters['search'] . "%' OR UPC LIKE '%" . $filters['search'] . "%'" : '';
     $promo_filter = $filters['promo'] == "0" || $filters['promo'] == "1" ? ($filter_search || $filter_cashier ? "AND" : "WHERE") . " promotional_product = " . $filters['promo'] : '';
 
     $stmt = $conn->prepare("SELECT * FROM Store_Product LEFT JOIN Product ON Store_Product.id_product = Product.id_product $filter_cashier $filter_search $promo_filter ORDER BY $sort");
@@ -176,7 +176,7 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
             $stmt = $conn->query("SELECT category_name FROM Category WHERE category_number = $cat_num");
             $cat_name = $stmt->fetch(PDO::FETCH_ASSOC)['category_name'];
         }
-        echo '<div class="banner alert-success">
+        echo '<div class="banner alert-info">
         Found ' . count($products) . 
         ($filter_search ? ' match'.(count($products) > 1 ? 'es' : '').' for search query "' . $filters['search'].'"' :' item'.(count($products) > 1 ? 's' : '')). 
         ($cat_name ? ' in category ' . $cat_name : '') . 

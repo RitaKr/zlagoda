@@ -5,6 +5,8 @@
 include_once 'functions.php';
 include_once 'db-connection.php';
 
+define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT']);
+
 $action = !empty ($_REQUEST['action']) ? $_REQUEST['action'] : '';
 switch ($action) {
     case 'add':
@@ -55,8 +57,31 @@ switch ($action) {
         echo $_SESSION['scrollPosition'][$currentPage];
     }
     break;
+    case 'signup':
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        
+        $username = $_POST["username"];
+        $password = $_POST["password"];
+        $empl_id = $_POST["id"];
+    
+        register($username, $empl_id, $password);
+
+        exit; // Ensure that no further code is executed after the redirect
+    }
+    break;
+    case 'signin':
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        //var_dump($_POST);
+        $username = $_POST["username"];
+        $password = $_POST["password"];
+    
+        authenticate($username, $password);
+    
+        exit; // Ensure that no further code is executed after the redirect
+    }
+    break;
     default:
-        // include 'list.php';
+
         break;
 }
 
@@ -297,13 +322,13 @@ function delete_item($conn)
             $_SESSION['message'] = 'The '. $table_names[$table_name] . ' was not deleted for integrity reasons';
             $_SESSION['message_type'] = 'warning';
         }
-        if ($stmt->execute()) {
-            $_SESSION['message'] = 'The '. $table_names[$table_name] .' was deleted successfully!';
-            $_SESSION['message_type'] = 'success';
-        } else {
-            $_SESSION['message'] = 'There was an error while deleting '. $table_names[$table_name];
-            $_SESSION['message_type'] = 'danger';
-        }
+            if ($stmt->execute()) {                  
+                    $_SESSION['message'] = 'The '. $table_names[$table_name] .' was deleted successfully!';
+                    $_SESSION['message_type'] = 'success';
+                } else {
+                    $_SESSION['message'] = 'There was an error while deleting '. $table_names[$table_name];
+                    $_SESSION['message_type'] = 'danger';                    
+            }
         header('Location: ' . $_SERVER['HTTP_REFERER']);
         exit;
     }

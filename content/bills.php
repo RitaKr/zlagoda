@@ -96,10 +96,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $date_to = $filters['date-from'] ? date('Y-m-d', strtotime($filters['date-to'])) : date('Y-m-d');
 
     $date_from_filter = $filters['date-from'] ?  "WHERE print_date >= '" . $date_from . "'" : '';
-    $date_to_filter = $filters['date-to'] ? ($date_from_filter  ? "AND" : "WHERE") . " print_date <= '" . $date_to . "'" : '';
+    $date_to_filter = $filters['date-to'] ? ($date_from_filter  ? "AND" : "WHERE") . " print_date <= '" . date('Y-m-d', strtotime($date_to . ' +1 day')) . "'" : '';
     $filter_cashier = $filters['cashier'] ? ($date_from_filter || $date_to_filter ? "AND" : "WHERE") ." id_employee_bill = " . $filters['cashier'] : (has_role("cashier") ? 'WHERE id_employee_bill = ' . $_SESSION["user_id"] : '');
 
-    $filter_search = $filters['search']!==""  ? ($filter_cashier || $date_from_filter || $date_to_filter ? "AND" : "WHERE") . " Bill.bill_number LIKE '%" . $filters['search'] . "%'" : '';
+    $filter_search = isset($filters['search']) && $filters['search']!==""  ? ($filter_cashier || $date_from_filter || $date_to_filter ? "AND" : "WHERE") . " Bill.bill_number LIKE '%" . $filters['search'] . "%'" : '';
+
     ?>
 
     <section class="control-panel">
@@ -320,7 +321,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $empl = $stmt->fetch(PDO::FETCH_ASSOC);
         }
         
-        echo '<div class="banner alert-success">
+        echo '<div class="banner alert-info">
         Found ' . count($bills) . 
         ($filter_search ? ' match'.(count($bills) > 1 ? 'es' : '').' for search query "' . $filters['search'].'"' :' bill'.(count($bills) > 1 ? 's' : '')). 
         ($empl ? ' by cashier ' . $empl["empl_surname"] . ' ' . $empl["empl_name"] : ''). 

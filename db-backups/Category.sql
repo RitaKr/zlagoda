@@ -6,10 +6,10 @@
 -- Generation Time: Mar 03, 2024 at 11:17 PM
 -- Server version: 8.3.0
 -- PHP Version: 8.2.8
-
+USE zlagoda;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
-SET time_zone = "+00:00";
+SET time_zone = "+03:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;

@@ -131,7 +131,7 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
 
     $sort = $filters['sort'] ? $filters['sort'] : 'product_name';
     $filter_cashier = $filters['cat'] ? "WHERE category_number = " . $filters['cat'] : '';
-    $filter_search = $filters['search'] !=="" ? ($filter_cashier ? "AND" : "WHERE") . " product_name LIKE '%" . $filters['search'] . "%'" : '';
+    $filter_search = isset($filters['search']) && $filters['search'] !=="" ? ($filter_cashier ? "AND" : "WHERE") . " product_name LIKE '%" . $filters['search'] . "%'" : '';
 
     $stmt = $conn->prepare("SELECT * FROM Product $filter_cashier $filter_search ORDER BY $sort");
     $stmt->execute();
@@ -143,7 +143,7 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
             $stmt = $conn->query("SELECT category_name FROM Category WHERE category_number = $cat_num");
             $cat_name = $stmt->fetch(PDO::FETCH_ASSOC)['category_name'];
         }
-        echo '<div class="banner alert-success">
+        echo '<div class="banner alert-info">
         Found ' . count($products) . 
         ($filter_search ? ' match'.(count($products) > 1 ? 'es' : '').' for search query "' . $filters['search'].'"' :' item'.(count($products) > 1 ? 's' : '')). 
         ($cat_name ? ' in category ' . $cat_name : '') . 

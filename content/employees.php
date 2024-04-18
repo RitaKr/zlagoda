@@ -167,7 +167,7 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
 
     $sort = $filters['sort'] ? $filters['sort'] : 'empl_surname';
     $filter_cashier = $filters['role'] ? "WHERE empl_role = '" . $filters['role']."'" : '';
-    $filter_search = $filters['search'] !=="" ? ($filter_cashier ? "AND" : "WHERE") . " empl_surname LIKE '%" . $filters['search'] . "%'" : '';
+    $filter_search = isset($filters['search']) && $filters['search'] !=="" ? ($filter_cashier ? "AND" : "WHERE") . " empl_surname LIKE '%" . $filters['search'] . "%'" : '';
 
     //print_r("SELECT * FROM Employee $filter_role $filter_search ORDER BY $sort");
     $stmt = $conn->prepare("SELECT * FROM Employee $filter_cashier $filter_search ORDER BY $sort");
@@ -175,10 +175,9 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
     $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (count($employees) > 0) {
-        
-        //echo '<div class="banner alert-success">Found ' . count($employees) . ' match' . (count($employees) > 1 ? 'es' : '') . ' for search query "' . $filters['search'] . (!empty($filters['role']) ? '" with role ' . $filters['role'] : '"') . '<button class="bi close">🗙</button></div>';
 
-        echo '<div class="banner alert-success">
+
+        echo '<div class="banner alert-info">
         Found ' . count($employees) . 
         ($filter_search ? ' match'.(count($employees) > 1 ? 'es' : '').' for search query "' . $filters['search'].'"' :' employee'.(count($employees) > 1 ? 's' : '')). 
         (!empty($filters['role']) ? ' with role ' . $filters['role'] : '') . 

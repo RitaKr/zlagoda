@@ -20,11 +20,12 @@ function has_role($role)
 }
 
 // Authenticate user
-function authenticate($un, $pass)
+function authenticate($un, $password)
 {
     include ROOT_PATH . '/db-connection.php';
-    //var_dump($un, $password, $id);
-    $hashedPassword = hash('sha256', $pass);
+
+    $hashedPassword = hash('sha256', $password);
+
     $stmt = $conn->prepare("SELECT id_employee, pass FROM User WHERE username = :un");
     $stmt->bindParam(':un', $un);
     $stmt->execute(); 
@@ -41,7 +42,7 @@ function authenticate($un, $pass)
         $_SESSION['role'] = $empl_role;
         $_SESSION['user_login'] = $un;
         unset($_SESSION['wrong_pass']);
-
+        
         header("Location: /index.php");
     } else {
         
@@ -90,12 +91,12 @@ function register($un, $id, $password)
 
         } else {
             // Query did not affect any rows (no records inserted, updated, or deleted)
-            echo "Query executed successfully, but no rows were affected.";
+            echo "<div class='banner alert-warning'>Query executed successfully, but no rows were affected</div>";
         }
         header("Location: /index.php");
     } catch (PDOException $e) {
         // Query execution failed
-        echo "<p>Error executing query: " . $e->getMessage() . "</p>";
+        echo "<div class='banner alert-danger'>Error executing query: " . $e->getMessage() . "</div>";
     }
 }
 
@@ -143,4 +144,31 @@ function get_new_bill_id(){
     
 }
 
+function create_table($table_name) {
+    include ROOT_PATH . '/db-connection.php';
+    $stmt = $conn->prepare("SHOW TABLES LIKE :table_name");
+    $stmt->bindParam(':table_name', $table_name);
+    $stmt->execute();
+    if (empty($stmt->fetchAll())) {
+        if ($table_name == 'User') {
+            signout();
+        }
+        $sql = file_get_contents(ROOT_PATH . '/empty-tables/' . $table_name . '.sql');
+        $conn->exec($sql);
+    }
+}
+
+function create_all_tables() {
+    include ROOT_PATH . '/db-connection.php';
+    
+    create_table('Employee');
+    create_table('User');
+    create_table('Category');
+    create_table('Product');
+    create_table('Store_Product');
+    create_table('Customer_Card');
+    create_table('Bill');
+    create_table('Sale');
+    
+}
 

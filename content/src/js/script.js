@@ -361,7 +361,7 @@ $(document).ready(function () {
 			billForm.find(".bill-item-fieldset .delete").click(function (e) {
 				e.preventDefault();
 				e.stopPropagation();
-				console.log("clicked on ", $(this));
+				//console.log("clicked on ", $(this));
 				const fieldset = $(this).parents(".bill-item-fieldset");
 				if (!$(this).attr("disabled")) {
 					const upc = fieldset.find(".UPC").val();
@@ -369,7 +369,7 @@ $(document).ready(function () {
 					if (selectedUPCs.includes(upc)) {
 						selectedUPCs.splice(selectedUPCs.indexOf(upc), 1);
 					}
-                    console.log("selectedUPCs after delete:", selectedUPCs)
+                    //console.log("selectedUPCs after delete:", selectedUPCs)
 					fieldset.remove();
 					updateDeleteButtons();
 				}
@@ -468,7 +468,7 @@ $(document).ready(function () {
 						(product.promotional_product == 1 ? " (promotional)" : ""),
 				};
 			});
-			console.log(allProducts);
+			//console.log(allProducts);
 			updateOutputs();
 		});
 
@@ -557,13 +557,6 @@ $(document).ready(function () {
             url: 'actions.php?action=update_scroll_position',
             type: 'post',
             data: {'scrollPosition':  newScrollPosition, "currentPage": currentPage},
-            success: function(response) {
-                // Handle response here
-                
-                //console.log(response);
-                //scrollPosition = parseFloat(response);
-                
-            },
             error: function(jqXHR, textStatus, errorThrown) {
                 // Handle the error here
                 console.log(textStatus, errorThrown);
@@ -573,15 +566,11 @@ $(document).ready(function () {
     $(window).scrollTop(scrollPosition);
     $('.add-form-container').on('toggle', function() {
         var detailsOpen = $(this).attr('open') ? 'open' : '';
-        console.log(detailsOpen)
+        //console.log(detailsOpen)
         $.ajax({
             url: 'actions.php?action=update_dialog_open',
             type: 'post',
             data: { 'detailsOpen': detailsOpen, "currentPage": currentPage},
-            success: function(response) {
-                // Handle response here
-                
-            },
             error: function(jqXHR, textStatus, errorThrown) {
                 // Handle the error here
                 console.log(textStatus, errorThrown);

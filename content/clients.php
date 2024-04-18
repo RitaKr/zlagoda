@@ -147,14 +147,14 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
 
     $sort = $filters['sort'] ? $filters['sort'] : 'cust_surname';
     $filter_role = $filters['discount'] ? "WHERE percent = " . $filters['discount'] : '';
-    $filter_search = $filters['search'] !=="" ? ($filter_role ? "AND" : "WHERE") . " cust_surname LIKE '%" . $filters['search'] . "%'" : '';
+    $filter_search = isset($filters['search']) && $filters['search'] !=="" ? ($filter_role ? "AND" : "WHERE") . " cust_surname LIKE '%" . $filters['search'] . "%'" : '';
 
     $stmt = $conn->prepare("SELECT * FROM Customer_Card $filter_role $filter_search ORDER BY $sort");
     $stmt->execute();
     $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (count($clients) > 0) {
-        echo '<div class="banner alert-success">
+        echo '<div class="banner alert-info">
         Found ' . count($clients) . 
         ($filter_search ? ' match'.(count($clients) > 1 ? 'es' : '').' for search query "' . $filters['search'].'"' :' client'.(count($clients) > 1 ? 's' : '')). 
         (!empty($filters['discount']) ? ' with discount ' . $filters['discount'].'%' : '') . 

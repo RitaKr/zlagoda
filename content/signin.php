@@ -5,7 +5,7 @@
 
     <section class="login-wrap">
         <div class="login-container">
-        <form action="<?ROOT_PATH?>/signin-handle.php" method="GET" class="login-form <?php echo isset($_SESSION['wrong_pass']) ? 'invalid-pass':''?>" id="signin-form">
+        <form action="<?ROOT_PATH?>/actions.php?action=signin" method="POST" class="login-form <?php echo isset($_SESSION['wrong_pass']) ? 'invalid-pass':''?>" id="signin-form">
         <h1>Sign in</h1>
             
             
