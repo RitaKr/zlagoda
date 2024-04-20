@@ -2,11 +2,11 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: database
--- Generation Time: Mar 29, 2024 at 03:03 AM
--- Server version: 8.3.0
--- PHP Version: 8.2.8
-USE zlagoda;
+-- Хост: database
+-- Час створення: Квт 20 2024 р., 08:23
+-- Версія сервера: 8.3.0
+-- Версія PHP: 8.2.8
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+03:00";
@@ -18,13 +18,13 @@ SET time_zone = "+03:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `zlagoda`
+-- База даних: `zlagoda`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Bill`
+-- Структура таблиці `Bill`
 --
 
 CREATE TABLE `Bill` (
@@ -37,7 +37,7 @@ CREATE TABLE `Bill` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `Bill`
+-- Дамп даних таблиці `Bill`
 --
 
 INSERT INTO `Bill` (`bill_number`, `id_employee_bill`, `card_number`, `print_date`, `sum_total`, `vat`) VALUES
@@ -48,14 +48,20 @@ INSERT INTO `Bill` (`bill_number`, `id_employee_bill`, `card_number`, `print_dat
 ('0000000005', '0000000001', NULL, '2024-03-28 17:18:03', 32.0000, 6.4000),
 ('0000000006', '0000000001', NULL, '2024-03-28 23:35:30', 65.4900, 13.1000),
 ('0000000007', '0000000001', '0000000000002', '2024-03-28 23:53:48', 472.5000, 94.5000),
-('0000000008', '0000000001', NULL, '2024-03-28 23:55:36', 210.0000, 42.0000);
+('0000000008', '0000000001', NULL, '2024-03-28 23:55:36', 210.0000, 42.0000),
+('0000000009', '0000000001', '0000000000005', '2024-04-19 21:18:26', 75.6800, 15.1400),
+('0000000010', '0000000001', NULL, '2024-04-19 21:19:47', 301.0300, 60.2100),
+('0000000011', '0000000001', '0000000000007', '2024-04-19 21:20:52', 178.0900, 35.6200),
+('0000000012', '0000000001', '0000000000008', '2024-04-19 21:21:50', 168.3000, 33.6600),
+('0000000013', '0000000001', NULL, '2024-04-19 21:23:20', 328.5800, 65.7200),
+('0000000014', '0000000001', '0000000000009', '2024-04-19 21:24:02', 139.7500, 27.9500);
 
 --
--- Indexes for dumped tables
+-- Індекси збережених таблиць
 --
 
 --
--- Indexes for table `Bill`
+-- Індекси таблиці `Bill`
 --
 ALTER TABLE `Bill`
   ADD PRIMARY KEY (`bill_number`),
@@ -63,11 +69,11 @@ ALTER TABLE `Bill`
   ADD KEY `id_employee` (`id_employee_bill`);
 
 --
--- Constraints for dumped tables
+-- Обмеження зовнішнього ключа збережених таблиць
 --
 
 --
--- Constraints for table `Bill`
+-- Обмеження зовнішнього ключа таблиці `Bill`
 --
 ALTER TABLE `Bill`
   ADD CONSTRAINT `card_number` FOREIGN KEY (`card_number`) REFERENCES `Customer_Card` (`card_number`) ON UPDATE CASCADE,

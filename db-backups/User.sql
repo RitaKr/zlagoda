@@ -2,11 +2,11 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: database
--- Generation Time: Mar 03, 2024 at 11:16 PM
--- Server version: 8.3.0
--- PHP Version: 8.2.8
-USE zlagoda;
+-- Хост: database
+-- Час створення: Квт 20 2024 р., 08:24
+-- Версія сервера: 8.3.0
+-- Версія PHP: 8.2.8
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+03:00";
@@ -18,13 +18,13 @@ SET time_zone = "+03:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `zlagoda`
+-- База даних: `zlagoda`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `User`
+-- Структура таблиці `User`
 --
 
 CREATE TABLE `User` (
@@ -34,7 +34,7 @@ CREATE TABLE `User` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `User`
+-- Дамп даних таблиці `User`
 --
 
 INSERT INTO `User` (`username`, `id_employee`, `pass`) VALUES
@@ -43,22 +43,22 @@ INSERT INTO `User` (`username`, `id_employee`, `pass`) VALUES
 ('petrenko', '0000000000', '47ef20207489b775fa4cdcac3c394b517ab22d7460237ae3df1ac0e8963699d6');
 
 --
--- Indexes for dumped tables
+-- Індекси збережених таблиць
 --
 
 --
--- Indexes for table `User`
+-- Індекси таблиці `User`
 --
 ALTER TABLE `User`
   ADD PRIMARY KEY (`username`),
   ADD KEY `id_employee` (`id_employee`);
 
 --
--- Constraints for dumped tables
+-- Обмеження зовнішнього ключа збережених таблиць
 --
 
 --
--- Constraints for table `User`
+-- Обмеження зовнішнього ключа таблиці `User`
 --
 ALTER TABLE `User`
   ADD CONSTRAINT `id_employee` FOREIGN KEY (`id_employee`) REFERENCES `Employee` (`id_employee`) ON DELETE CASCADE ON UPDATE CASCADE;

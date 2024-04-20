@@ -2,11 +2,11 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: database
--- Generation Time: Mar 03, 2024 at 11:17 PM
--- Server version: 8.3.0
--- PHP Version: 8.2.8
-USE zlagoda;
+-- Хост: database
+-- Час створення: Квт 20 2024 р., 08:23
+-- Версія сервера: 8.3.0
+-- Версія PHP: 8.2.8
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+03:00";
@@ -18,13 +18,13 @@ SET time_zone = "+03:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `zlagoda`
+-- База даних: `zlagoda`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Category`
+-- Структура таблиці `Category`
 --
 
 CREATE TABLE `Category` (
@@ -33,7 +33,7 @@ CREATE TABLE `Category` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `Category`
+-- Дамп даних таблиці `Category`
 --
 
 INSERT INTO `Category` (`category_number`, `category_name`) VALUES
@@ -41,29 +41,34 @@ INSERT INTO `Category` (`category_number`, `category_name`) VALUES
 (2, 'Випічка'),
 (3, 'Овочі'),
 (4, 'Фрукти та ягоди'),
-(5, 'Консерви'),
+(5, 'Мясо та мясні вироби'),
 (6, 'Напої'),
-(7, 'Шоколадні вироби');
+(7, 'Солодощі'),
+(8, 'Риба та морепродукти'),
+(9, 'Крупи та каші'),
+(10, 'Соуси та спеції'),
+(11, 'Снеки та закуски'),
+(12, 'Дитяче харчування');
 
 --
--- Indexes for dumped tables
+-- Індекси збережених таблиць
 --
 
 --
--- Indexes for table `Category`
+-- Індекси таблиці `Category`
 --
 ALTER TABLE `Category`
   ADD PRIMARY KEY (`category_number`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT для збережених таблиць
 --
 
 --
--- AUTO_INCREMENT for table `Category`
+-- AUTO_INCREMENT для таблиці `Category`
 --
 ALTER TABLE `Category`
-  MODIFY `category_number` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `category_number` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
