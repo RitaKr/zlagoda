@@ -246,7 +246,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $stmt->execute();
 
                             $product_totals = $stmt->fetch(PDO::FETCH_ASSOC);
-                    
+                            $total_income =doubleval($product_totals["total_income"]) - doubleval($product_totals["total_discount"]);
                             ?>
     
     
@@ -254,10 +254,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <?= intval($product_totals["total_quantity"]) ?>
                                 </span></h3>
                             <h3>Total income: <span>
-                            <span class="decimal"><?= doubleval($product_totals["total_income"]) - doubleval($product_totals["total_discount"]) ?></span> UAH
+                            <span class="decimal"><?=  $total_income?></span> UAH
                                 </span></h3>
                             <h3>Excluding VAT: <span>
-                            <span class="decimal"><?= $product_totals["total_income"] * 0.8 ?></span> UAH
+                            <span class="decimal"><?= $total_income * 0.8 ?></span> UAH
                                 </span></h3>
     
                         <?php else:
