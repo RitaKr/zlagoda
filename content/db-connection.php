@@ -1,5 +1,5 @@
 <?php
-$servername = "database"; // Change this if your database server is hosted elsewhere
+$servername = "database"; 
 $username = "admin";
 $password = "zlagoda_secret";
 $dbname = "zlagoda";

@@ -21,10 +21,10 @@
 
             <label for="password">
                 <span>Password</span>
-                <input type="password" name="password" id="password" placeholder="Enter your password">
+                <input type="password" name="password" id="password" class="password" placeholder="Enter your password">
                 <div class="alert pass-alert">
-                <p>Incorrect password!</p>
-            </div>
+                    <p>Incorrect password!</p>
+                </div>
                 
             </label>
             <button type="submit" id="signin-btn" class="btn-primary" disabled>Sign in</button>

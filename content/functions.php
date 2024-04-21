@@ -20,17 +20,17 @@ function has_role($role)
 }
 
 // Authenticate user
-function authenticate($un, $password)
+function authenticate($un, $pass)
 {
     include ROOT_PATH . '/db-connection.php';
 
-    $hashedPassword = hash('sha256', $password);
-
+    $hashedPassword = hash('sha256', $pass);
+    
     $stmt = $conn->prepare("SELECT id_employee, pass FROM User WHERE username = :un");
     $stmt->bindParam(':un', $un);
     $stmt->execute(); 
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
+  
     if ($user && $user["pass"] == $hashedPassword) {
         $id = $user["id_employee"];
         $stmt = $conn->prepare("SELECT empl_role FROM Employee WHERE id_employee = :id");
@@ -64,9 +64,8 @@ function signout()
 function register($un, $id, $password)
 {
     include ROOT_PATH . '/db-connection.php';
-    //var_dump($un, $password, $id);
     $hashedPassword = hash('sha256', $password);
-    //Insert data into the database
+
 
     $sql = "INSERT INTO User (username, id_employee, pass) VALUES (:username, :id_employee, :pass)";
 

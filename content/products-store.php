@@ -49,7 +49,7 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                     <option value="" <?= !$filters['cat'] ? "selected" : "" ?>>All
                     </option>
                     <?php
-                    $stmt = $conn->query("SELECT * FROM Category");
+                    $stmt = $conn->query("SELECT * FROM Category ORDER BY category_name");
                     $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                     foreach ($products as $product):

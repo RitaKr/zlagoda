@@ -66,7 +66,7 @@ switch ($action) {
     
         register($username, $empl_id, $password);
 
-        exit; // Ensure that no further code is executed after the redirect
+        exit; 
     }
     break;
     case 'signin':
@@ -77,8 +77,11 @@ switch ($action) {
     
         authenticate($username, $password);
     
-        exit; // Ensure that no further code is executed after the redirect
+        exit; 
     }
+    break;
+    case 'change_password' :
+    change_password($conn);
     break;
     default:
 
@@ -349,4 +352,52 @@ function get_product_info_by_UPC($conn)
     } else {
         echo json_encode(["error" => "No results found"]);
     }
+}
+
+function change_password($conn) {
+session_start();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $old_password = hash('sha256', $_POST['old_password']);
+    $new_password = hash('sha256', $_POST['new_password']);
+    if (!$old_password) {
+        $_SESSION['wrong_pass'] = 1;
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+    }
+
+    // Prepare the SQL statement
+    $stmt = $conn->prepare('SELECT pass FROM User WHERE id_employee = :id');
+    $stmt->bindParam(':id', $_SESSION['user_id']);
+
+    if ($stmt->execute()) {
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Check if the old password is correct
+        if ($row['pass'] == $old_password) {
+            // Prepare the SQL statement to update the password
+            $stmt = $conn->prepare('UPDATE User SET pass = :new_password WHERE id_employee = :id');
+            $stmt->bindParam(':id', $_SESSION['user_id']);
+            $stmt->bindParam(':new_password', $new_password);
+
+            // Execute the statement
+            if ($stmt->execute()) {
+                $_SESSION['message'] = 'Password changed successfully!';
+                $_SESSION['message_type'] = 'success';
+            } else {
+                $_SESSION['message'] = 'There was an error changing your password.';
+                $_SESSION['message_type'] = 'danger';
+            }
+        } else {
+            $_SESSION['message'] = 'The old password is incorrect.';
+            $_SESSION['message_type'] = 'danger';
+        }
+    } else {
+        
+        $_SESSION['message'] = 'There was an error retrieving your account.';
+        $_SESSION['message_type'] = 'danger';
+        
+    }
+    header("Location: " . $_SERVER['HTTP_REFERER']);
+}
+
 }

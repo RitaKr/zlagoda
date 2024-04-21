@@ -61,7 +61,7 @@
 
             <label for="password">
                 <span>Password</span>
-                <input type="password" name="password" id="password" placeholder="Create password">
+                <input type="password" name="password"  class="password" id="password" placeholder="Create password">
                 <div class="alert pass-alert">
                     <p>Password is too weak!</p>
                 </div>
@@ -153,7 +153,7 @@
 
     });
     passInput.addEventListener("input", (e) => {
-        console.log(e.currentTarget.value);
+        //console.log(e.currentTarget.value);
         validatePassword();
         validateForm();
 

@@ -23,18 +23,7 @@
 		color: $primary-hover;
 		text-decoration: underline;
 	}
-	.alert p {
-		color: $invalid-bg;
-		font-size: 0.85rem;
-		font-weight: 500;
-	}
-    .notice {
-        font-size: 0.8rem;
-		font-weight: 400;
-        width: 100%;
-        margin-top: 4px;
-		color: $textcol1;
-    }
+	
 }
 input, select {
 	outline: none;
@@ -83,7 +72,7 @@ input, select {
 		font-size: 1rem;
 	}
 	&.invalid-pass {
-		#password {
+		.password {
 			outline: 2px $invalid solid;
 			//background: $invalid-bg;
 		}
@@ -100,6 +89,18 @@ input, select {
 			display: block;
 		}
 	}
+	.alert p {
+		color: $invalid-bg;
+		font-size: 0.85rem;
+		font-weight: 500;
+	}
+    .notice {
+        font-size: 0.8rem;
+		font-weight: 400;
+        width: 100%;
+        margin-top: 4px;
+		color: $textcol1;
+    }
 }
 .invalid {
 	outline: 2px $invalid solid !important;

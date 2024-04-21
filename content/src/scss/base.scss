@@ -1225,6 +1225,20 @@ p {
 		}
 	}
 }
+.two-cols {
+	display: flex;
+	flex-wrap: wrap;
+	column-gap: 30px;
+
+	.info {
+		
+		flex-grow: 6;
+	}
+	.change-pass {
+		flex-basis: 350px;
+		flex-grow: 1;
+	}
+}
 .container {
 	background: white;
 	margin: 20px 0;
@@ -1241,4 +1255,11 @@ p {
 	p {
 		width: fit-content;
 	}
+	.login-form {
+		padding: 10px 0;
+		border-top: 2px solid $bg;
+	.notice {
+		color: $textcol;
+	}
+}
 }
