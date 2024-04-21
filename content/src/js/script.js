@@ -57,9 +57,20 @@ $(document).ready(function () {
 	);
 
 	//submits form with filters when filter value is changed
-	$(".filters-form select, .totals-form select").on("change", function () {
+	$(".filters-form select, .filters-form input[type='checkbox'], .totals-form select").on("change", function () {
 		$(this).closest("form").submit();
 	});
+
+	if ($("#served-all-clients").is(":checked")) {
+		$(".filters-form")
+			.find("select, input:not(#served-all-clients)")
+			.prop("disabled", true);
+	} else {
+		$(".filters-form")
+			.find("select, input:not(#served-all-clients)")
+			.prop("disabled", false);
+	}
+
 	$('.filters-form input[type="date"]').on("blur", function () {
 		$(this).closest("form").submit();
 	});
@@ -68,6 +79,7 @@ $(document).ready(function () {
 			$(this).closest("form").submit();
 		}
 	});
+
 	$("#edit-form .edit, #edit-form .delete").click(function (e) {
 		e.preventDefault();
 	});
@@ -259,7 +271,7 @@ $(document).ready(function () {
 	$(".print").click(function () {
 		var clone = $(".content-table").clone(); // clone the table
 		clone.find("td:has(button)").remove(); // remove td's that contain a button
-        clone.find("th.empty").remove(); 
+		clone.find("th.empty").remove();
 		var printContents = $("<div>").append(clone).html(); // get the outer html of the cloned table
 		var originalContents = document.body.innerHTML;
 
@@ -336,7 +348,7 @@ $(document).ready(function () {
 		const billForm = $("#create-bill-form");
 		var allProducts = []; // Array of all UPCs
 		var selectedUPCs = []; // Array of selected UPCs
-        let percent = 0;
+		let percent = 0;
 		// Function to update the options of a select
 		function updateOptions(select) {
 			var selectedUPC = select.val();
@@ -357,7 +369,7 @@ $(document).ready(function () {
 		}
 
 		function updateDeleteButtons() {
-            updateTotals();
+			updateTotals();
 			billForm.find(".bill-item-fieldset .delete").click(function (e) {
 				e.preventDefault();
 				e.stopPropagation();
@@ -365,11 +377,11 @@ $(document).ready(function () {
 				const fieldset = $(this).parents(".bill-item-fieldset");
 				if (!$(this).attr("disabled")) {
 					const upc = fieldset.find(".UPC").val();
-                    
+
 					if (selectedUPCs.includes(upc)) {
 						selectedUPCs.splice(selectedUPCs.indexOf(upc), 1);
 					}
-                    //console.log("selectedUPCs after delete:", selectedUPCs)
+					//console.log("selectedUPCs after delete:", selectedUPCs)
 					fieldset.remove();
 					updateDeleteButtons();
 				}
@@ -383,29 +395,34 @@ $(document).ready(function () {
 			}
 		}
 
-        function updateTotals(){
-            let totals = billForm.find(".bill-item-fieldset").toArray().reduce(function(acc, item){
-                const quantity = parseInt($(item).find(".product_number").val());
-                const price = parseFloat($(item).find(".selling_price-output").text());
-                //console.log($(item).find(".selling_price"), $(item).find(".selling_price").text());
-                const total = quantity * price;
-                acc += total;
-                //console.log(quantity, price);
-                return acc;
-            }, 0);
-            let discount = totals*(parseFloat(percent)*0.01);
-            totals -= discount;
-            billForm.find("#sum_total-output").text(totals.toFixed(2));
-            billForm.find("#vat-output").text((totals*0.2).toFixed(2));
-            billForm.find("#sum_total").val(totals.toFixed(2));
-            billForm.find("#vat").val((totals*0.2).toFixed(2));
-            billForm.find("#discount").val(discount.toFixed(2));
-        }
+		function updateTotals() {
+			let totals = billForm
+				.find(".bill-item-fieldset")
+				.toArray()
+				.reduce(function (acc, item) {
+					const quantity = parseInt($(item).find(".product_number").val());
+					const price = parseFloat(
+						$(item).find(".selling_price-output").text()
+					);
+					//console.log($(item).find(".selling_price"), $(item).find(".selling_price").text());
+					const total = quantity * price;
+					acc += total;
+					//console.log(quantity, price);
+					return acc;
+				}, 0);
+			let discount = totals * (parseFloat(percent) * 0.01);
+			totals -= discount;
+			billForm.find("#sum_total-output").text(totals.toFixed(2));
+			billForm.find("#vat-output").text((totals * 0.2).toFixed(2));
+			billForm.find("#sum_total").val(totals.toFixed(2));
+			billForm.find("#vat").val((totals * 0.2).toFixed(2));
+			billForm.find("#discount").val(discount.toFixed(2));
+		}
 		function updateOutputs() {
 			updateDeleteButtons();
 			updateSubmitBtn();
-            updateTotals();
-            billForm.find("#card_number").change(getDiscountPercent);
+			updateTotals();
+			billForm.find("#card_number").change(getDiscountPercent);
 			billForm.find(".bill-item-fieldset").each(function (i) {
 				//console.log("select #" + i);
 				const fieldset = $(this);
@@ -443,14 +460,11 @@ $(document).ready(function () {
 					getProductInfo(fieldset);
 					oldUPC = select.val();
 					updateSubmitBtn();
-                    
 				});
-                fieldset.find(".product_number").change(function(){
-                    updateTotals();
-                
-                })
+				fieldset.find(".product_number").change(function () {
+					updateTotals();
+				});
 				getProductInfo(fieldset);
-                
 			});
 		}
 
@@ -500,8 +514,8 @@ $(document).ready(function () {
 		}
 
 		//updateOutputs();
-        function getDiscountPercent(){
-            $.ajax({
+		function getDiscountPercent() {
+			$.ajax({
 				url: "actions.php?action=get_discount_percent",
 				type: "post",
 				data: { card_number: billForm.find("#card_number").val() },
@@ -511,14 +525,13 @@ $(document).ready(function () {
 					if (res.error) {
 						percent = 0;
 					} else {
-                        percent = parseInt(res);
-                    }
-                    
-					
-                    updateTotals();
+						percent = parseInt(res);
+					}
+
+					updateTotals();
 				},
 			});
-        }
+		}
 		function getProductInfo(fieldset) {
 			$.ajax({
 				url: "actions.php?action=get_product_info",
@@ -539,47 +552,46 @@ $(document).ready(function () {
 
 					// Set the value of the output with the id selling_price
 					//console.log(fieldset.find(".selling_price"));
-					fieldset.find(".selling_price-output").text(parseFloat(data.selling_price).toFixed(2));
-                    fieldset.find("#selling_price").val(parseFloat(data.selling_price).toFixed(2));
-                    updateTotals();
+					fieldset
+						.find(".selling_price-output")
+						.text(parseFloat(data.selling_price).toFixed(2));
+					fieldset
+						.find("#selling_price")
+						.val(parseFloat(data.selling_price).toFixed(2));
+					updateTotals();
 				},
 			});
-
-            
 		}
 	}
 
-    
-    $(window).on("scroll", function(){
-        
-        var newScrollPosition = $(window).scrollTop();
-        $.ajax({
-            url: 'actions.php?action=update_scroll_position',
-            type: 'post',
-            data: {'scrollPosition':  newScrollPosition, "currentPage": currentPage},
-            error: function(jqXHR, textStatus, errorThrown) {
-                // Handle the error here
-                console.log(textStatus, errorThrown);
-            }
-        });
-    });
-    $(window).scrollTop(scrollPosition);
-    $('.add-form-container').on('toggle', function() {
-        var detailsOpen = $(this).attr('open') ? 'open' : '';
-        //console.log(detailsOpen)
-        $.ajax({
-            url: 'actions.php?action=update_dialog_open',
-            type: 'post',
-            data: { 'detailsOpen': detailsOpen, "currentPage": currentPage},
-            error: function(jqXHR, textStatus, errorThrown) {
-                // Handle the error here
-                console.log(textStatus, errorThrown);
-            }
-        });
-    });
-    
-    $(".decimal").each(function(){
-        $(this).text(parseFloat($(this).text()).toFixed(2))
-    
-    })
+	$(window).on("scroll", function () {
+		var newScrollPosition = $(window).scrollTop();
+		$.ajax({
+			url: "actions.php?action=update_scroll_position",
+			type: "post",
+			data: { scrollPosition: newScrollPosition, currentPage: currentPage },
+			error: function (jqXHR, textStatus, errorThrown) {
+				// Handle the error here
+				console.log(textStatus, errorThrown);
+			},
+		});
+	});
+	$(window).scrollTop(scrollPosition);
+	$(".add-form-container").on("toggle", function () {
+		var detailsOpen = $(this).attr("open") ? "open" : "";
+		//console.log(detailsOpen)
+		$.ajax({
+			url: "actions.php?action=update_dialog_open",
+			type: "post",
+			data: { detailsOpen: detailsOpen, currentPage: currentPage },
+			error: function (jqXHR, textStatus, errorThrown) {
+				// Handle the error here
+				console.log(textStatus, errorThrown);
+			},
+		});
+	});
+
+	$(".decimal").each(function () {
+		$(this).text(parseFloat($(this).text()).toFixed(2));
+	});
 });

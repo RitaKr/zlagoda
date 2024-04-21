@@ -57,7 +57,10 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
                     <?php endforeach; ?>
                 </select>
             </label>
-
+            <label for="served-all-clients" class="promo-filter">
+                <span>Only cashiers who served every customer with discount card</span>
+                <input type="checkbox" name="served-all-clients" id="served-all-clients" <?= isset ($filters['served-all-clients']) && $filters['served-all-clients'] ? "checked" : "" ?>>
+            </label>
             
         </form>
     </section>
@@ -170,12 +173,17 @@ $filters = isset($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDat
     $filter_search = isset($filters['search']) && $filters['search'] !=="" ? ($filter_cashier ? "AND" : "WHERE") . " empl_surname LIKE '%" . $filters['search'] . "%'" : '';
 
     //print_r("SELECT * FROM Employee $filter_role $filter_search ORDER BY $sort");
-    $stmt = $conn->prepare("SELECT * FROM Employee $filter_cashier $filter_search ORDER BY $sort");
+    
+    if ($filters["served-all-clients"]) {
+        $stmt = $conn->prepare("SELECT * FROM Employee E WHERE NOT EXISTS (SELECT * FROM Customer_Card CC WHERE CC.card_number NOT IN (SELECT B.card_number FROM Bill B WHERE B.id_employee_bill = E.id_employee AND B.card_number = CC. card_number))");
+    } else {
+        $stmt = $conn->prepare("SELECT * FROM Employee $filter_cashier $filter_search ORDER BY $sort");
+    }
+    
     $stmt->execute();
     $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (count($employees) > 0) {
-
 
         echo '<div class="banner alert-info">
         Found ' . count($employees) . 

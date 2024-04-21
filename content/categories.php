@@ -1,10 +1,40 @@
 <?php
+include_once 'functions.php';
+//unset($_SESSION['filtersData']);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Storing filters data in the session, so that it wasn't reset after submission of other forms
+    $currentPage = basename($_SERVER['SCRIPT_NAME']);
+    $_SESSION['filtersData'][$currentPage] = $_POST;
+}
 
+$currentPage = basename($_SERVER['SCRIPT_NAME']);
+$filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersData'][$currentPage] : array();
 ?>
 <?php include 'components/header.php'; ?>
 <main class="main-wrap">
     <h1>All product categories</h1>
 
+    <section class="control-panel">
+
+        <form action="" method="post" class="filters-form ">
+           
+        <label for="cat_filter">
+                <span>Category filters</span>
+                <select name="cat_filter" id="cat_filter">
+                    <option value="" <?= !$filters['cat_filter'] ? "selected" : "" ?>>No filters
+                    </option>
+                    <option value="all_in_store" <?= isset ($filters['cat_filter']) && $filters['cat_filter'] == "all_in_store" ? "selected" : ""?>>
+                            Categories, with all of their products in store
+                     </option>
+                     <option value="all_in_store_promo" <?= isset ($filters['cat_filter']) && $filters['cat_filter'] == "all_in_store_promo" ? "selected" : ""?>>
+                            Categories, with all of their store products having non-promotional items
+                     </option>
+                </select>
+            </label>
+
+            
+        </form>
+    </section>
 
     <?php if (has_role('manager')): ?>
         <section class="control-panel">
@@ -48,7 +78,18 @@
         unset($_SESSION['message_type']);
     }
 
-    $stmt = $conn->prepare("SELECT * FROM Category ORDER BY category_name");
+    switch ($filters['cat_filter']) {
+        case 'all_in_store':
+            $stmt = $conn->prepare("SELECT * FROM Category C WHERE NOT EXISTS (SELECT  * FROM Product P WHERE P.category_number = C.category_number  AND P.id_product NOT IN (SELECT SP.id_product FROM Store_Product SP))");
+            break;
+        case 'all_in_store_promo':
+            $stmt = $conn->prepare("SELECT * FROM Category C WHERE NOT EXISTS (SELECT * FROM Product P WHERE P. category_number = C.category_number AND P.id_product IN (SELECT SP.id_product FROM Store_Product SP) AND P.id_product NOT IN (SELECT SP.id_product FROM Store_Product SP WHERE SP.promotional_product = 1))");
+            break;
+        default:
+            $stmt = $conn->prepare("SELECT * FROM Category ORDER BY category_name");
+            break;
+    }
+    //$stmt = $conn->prepare("SELECT * FROM Category ORDER BY category_name");
     $stmt->execute();
     $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
