@@ -76,13 +76,7 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
             </ul>
         </nav>
         <div class="menu-right">
-            <?php if (!is_logged_in()): ?>
-                <div class="signin-switch">
-                    <a href="<? ROOT_PATH ?>/signup.php" target="" <?php echo ($_SERVER['PHP_SELF'] == '/signup.php') ? 'class="active"' : ''; ?>>Sign up</a>
-                    <a href="<? ROOT_PATH ?>/signin.php" target="" <?php echo ($_SERVER['PHP_SELF'] == '/signin.php') ? 'class="active"' : ''; ?>>Login</a>
-                </div>
-
-            <?php else: ?>
+            
                 <a href="<? ROOT_PATH ?>/account.php" alt="My account" title="My account" target="" class="my-account <?= $_SERVER['PHP_SELF'] == '/account.php' ? 'active' : '' ?>">
                     <div>
                         <p class="login"><?= $_SESSION["user_login"]?></p>
@@ -95,7 +89,6 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                             d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
                     </svg>
                 </a>
-            <?php endif; ?>
 
         </div>
     </header>

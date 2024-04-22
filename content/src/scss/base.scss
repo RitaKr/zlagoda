@@ -56,30 +56,7 @@ p {
 	position: sticky;
 	top: 0;
 
-	.signin-switch {
-		border-radius: 30px;
-		display: flex;
-		background: $blue2;
-		a {
-			flex-grow: 1;
-			display: inline-block;
-			padding: 10px 15px;
-			border-radius: 30px;
-			color: white;
-			text-align: center;
-			font-size: 0.8rem;
-			&:first-child {
-				padding-right: 10px;
-			}
-			&:last-child {
-				padding-left: 10px;
-			}
-			&.active {
-				background: $blue;
-				padding: 10px 15px;
-			}
-		}
-	}
+	
 	.menu-right {
 		display: flex;
 		align-items: center;
@@ -128,6 +105,33 @@ p {
 	}
 }
 
+.signin-switch {
+	position: absolute;
+	top: 1rem;
+	right: 2rem;
+	border-radius: 30px;
+	display: flex;
+	background: $blue2;
+	a {
+		flex-grow: 1;
+		display: inline-block;
+		padding: 10px 15px;
+		border-radius: 30px;
+		color: white;
+		text-align: center;
+		font-size: 0.8rem;
+		&:first-child {
+			padding-right: 10px;
+		}
+		&:last-child {
+			padding-left: 10px;
+		}
+		&.active {
+			background: $blue;
+			padding: 10px 15px;
+		}
+	}
+}
 .mainmenu {
 	background: inherit;
 	position: absolute;
@@ -203,7 +207,7 @@ p {
 		transform: translateX(-50%) scaleY(1);
 	}
 }
-.logo {
+.logo, .logo-container {
 	display: flex;
 	flex-wrap: nowrap;
 	gap: 10px;
@@ -211,6 +215,17 @@ p {
 		font-weight: 300;
 		font-size: 2rem;
 		color: $linkcol;
+	}
+}
+.logo-container {
+	position: absolute;
+	top: 10px;
+	left: 2rem;
+	img {
+		filter: invert(1)
+	}
+	h2 {
+		color: $textcol;
 	}
 }
 .footer {

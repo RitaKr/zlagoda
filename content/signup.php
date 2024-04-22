@@ -1,4 +1,4 @@
-<?php include 'components/header.php'; ?>
+<?php include 'components/login-switch.php'; ?>
 
 <section class="login-wrap">
     <div class="login-container">
