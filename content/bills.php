@@ -215,28 +215,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </summary>
                 <div class="totals-panel">
                     <div class="grand-totals">
-                        <h2>Grand totals</h2>
-                        <form action="bills.php?form=totals" method="post" class="totals-form ">
-                            <input type="hidden" name="card_number" value="<?= $filters['card_number']?>">
-                            <label for="product-filter" class="">For</label>
-                            <select name="id_product" id="product-filter">
-                                <option value="" <?= !$filters['id_product'] ? "selected" : "" ?>>All store products
-                                </option>
-                                <?php
-
-                                $stmt = $conn->query("SELECT DISTINCT Product.id_product, product_name, producer FROM Store_Product LEFT JOIN Product ON Store_Product.id_product = Product.id_product WHERE UPC IN (SELECT DISTINCT Sale.UPC FROM Sale) ORDER BY product_name");
-                                $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                                foreach ($products as $product): ?>
-                                    <option value="<?= $product['id_product'] ?>" <?= isset($filters['id_product']) && $filters['id_product'] == $product['id_product'] ? "selected" : ""
-                                          ?>>
-                                        <?= $product['product_name'] ?> by
-                                        <?= $product['producer'] ?>
+                        <div class="totals-header">
+                            <h2>Grand totals</h2>
+                            <form action="bills.php?form=totals" method="post" class="totals-form ">
+                                <input type="hidden" name="card_number" value="<?= $filters['card_number'] ?>">
+                                <label for="product-filter" class="">For</label>
+                                <select name="id_product" id="product-filter">
+                                    <option value="" <?= !$filters['id_product'] ? "selected" : "" ?>>All store products
                                     </option>
-                                <?php endforeach; ?>
-                            </select>
+                                    <?php
 
-                        </form>
+                                    $stmt = $conn->query("SELECT DISTINCT Product.id_product, product_name, producer FROM Store_Product LEFT JOIN Product ON Store_Product.id_product = Product.id_product WHERE UPC IN (SELECT DISTINCT Sale.UPC FROM Sale) ORDER BY product_name");
+                                    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                    foreach ($products as $product): ?>
+                                        <option value="<?= $product['id_product'] ?>" <?= isset($filters['id_product']) && $filters['id_product'] == $product['id_product'] ? "selected" : ""
+                                              ?>>
+                                            <?= $product['product_name'] ?> by
+                                            <?= $product['producer'] ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+
+                            </form>
+                        </div>
                         <div class="totals-container">
 
                             <?php
@@ -245,14 +247,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
                                 $stmt = $conn->prepare("SELECT (SUM(S.product_number * S.selling_price) - SUM(S.selling_price * S.product_number * COALESCE((SELECT percent FROM Customer_Card WHERE card_number = B.card_number), 0) * 0.01)) AS total_income, SUM(S.product_number) AS total_quantity FROM  (Sale S LEFT JOIN  Bill B ON B.bill_number = S.bill_number)  LEFT JOIN  Store_Product SP ON SP.UPC = S.UPC WHERE B.print_date >= :date_from_param AND B.print_date <= :date_to_param AND SP.id_product =  :id_product_param GROUP BY S.UPC");
+
                                 $stmt->bindParam(':date_from_param', $date_from);
                                 $stmt->bindParam(':date_to_param', $date_to);
                                 $stmt->bindParam(':id_product_param', $id_product);
                                 $stmt->execute();
 
                                 $product_totals = $stmt->fetch(PDO::FETCH_ASSOC);
-                                
-                                
+
+
                                 ?>
 
 
@@ -299,69 +302,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
                     </div>
                     <div>
-                    <h2>Top 5 most profitable products</h2>
+                        <div class="totals-header">
+                            <h2>Top 5 most profitable products</h2>
+                        </div>
                         <div class="totals-container">
-                        
+
                             <?php
-                                $stmt = $conn->prepare("SELECT P.product_name,  P.producer, (SUM(S.product_number * S.selling_price) - SUM(S.selling_price * S.product_number * COALESCE((SELECT percent FROM Customer_Card WHERE card_number = B.card_number), 0) * 0.01)) AS total_profit FROM  Product P JOIN Store_Product SP ON P.id_product = SP.id_product JOIN Sale S ON SP.UPC = S.UPC JOIN Bill B ON S.bill_number = B.bill_number WHERE B.print_date >= :date_from_param AND B.print_date <= :date_to_param GROUP BY P.product_name, P.producer ORDER BY total_profit DESC LIMIT 5");
+                            $stmt = $conn->prepare("SELECT P.product_name,  P.producer, (SUM(S.product_number * S.selling_price) - SUM(S.selling_price * S.product_number * COALESCE((SELECT percent FROM Customer_Card WHERE card_number = B.card_number), 0) * 0.01)) AS total_profit FROM  Product P JOIN Store_Product SP ON P.id_product = SP.id_product JOIN Sale S ON SP.UPC = S.UPC JOIN Bill B ON S.bill_number = B.bill_number WHERE B.print_date >= :date_from_param AND B.print_date <= :date_to_param GROUP BY P.product_name, P.producer ORDER BY total_profit DESC LIMIT 5");
 
-                                $stmt->bindParam(':date_from_param', $date_from);
-                                $stmt->bindParam(':date_to_param', $date_to);
-                                $stmt->execute();
+                            $stmt->bindParam(':date_from_param', $date_from);
+                            $stmt->bindParam(':date_to_param', $date_to);
+                            $stmt->execute();
 
-                                $top_profit = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                                //var_dump($top_profit);
-                                echo '<ol>';
-                                foreach ($top_profit as $item) {
-                                    echo "<li><h3><span>".$item['product_name']." by ".$item['producer'].":</span><span class='value'><span class='decimal'>".$item['total_profit']."</span> UAH</span></h3></li>";
-                                }
-                                echo '</ol>'
+                            $top_profit = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            
+                            echo '<ol>';
+                            foreach ($top_profit as $item) {
+                                echo "<li><h3><span>" . $item['product_name'] . " by " . $item['producer'] . ":</span><span class='value'><span class='decimal'>" . $item['total_profit'] . "</span> UAH</span></h3></li>";
+                            }
+                            echo '</ol>'
                                 ?>
 
                         </div>
                     </div>
                     <div>
-                        
-                        <h2>Top 5 most popular products</h2>
-                        <form action="bills.php?form=totals" method="post" class="totals-form ">
-                        <input type="hidden" name="id_product" value="<?= $filters['id_product']?>">
-                            <label for="client-filter" class="">By </label>
-                            <select name="card_number" id="client-filter">
-                                <option value="" <?= !$filters['card_number'] ? "selected" : "" ?>>All customers </option>
-                                <?php
-
-                                $stmt = $conn->query("SELECT * FROM Customer_Card WHERE Customer_Card.card_number IN (SELECT DISTINCT Bill.card_number FROM Bill) ORDER BY cust_surname, cust_name, phone_number");
-                                $cards = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                                foreach ($cards as $card): ?>
-                                    <option value="<?= $card['card_number'] ?>" <?= isset($filters['card_number']) && $filters['card_number'] == $card['card_number'] ? "selected" : ""
-                                          ?>> <?= $card['cust_surname'] ?> <?= $card['cust_name'] ?> (<?= $card['phone_number'] ?>) 
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-
-                        </form>
+                        <div class="totals-header">
+                            <h2>Top 5 most popular products</h2>
+                        </div>
                         <div class="totals-container">
-                    
+
                             <?php
-                            if ($filters["card_number"]) {
-                                $card_number = $filters["card_number"];
 
-                                $stmt = $conn->prepare("SELECT P.product_name, P.producer, SUM(S.product_number) AS total_units_sold
-                                FROM Product P
-                                JOIN Store_Product SP ON P.id_product = SP.id_product
-                                JOIN Sale S ON SP.UPC = S.UPC
-                                JOIN Bill B ON S.bill_number = B.bill_number
-                                JOIN Customer_Card CC ON B.card_number = CC.card_number
-                                WHERE B.print_date >= :date_from_param AND B.print_date <= :date_to_param 
-                                AND CC.card_number = :card_number
-                                GROUP BY P.product_name, P.producer
-                                ORDER BY total_units_sold DESC
-                                LIMIT 5;");
-
-                                $stmt->bindParam(':card_number', $card_number);
-                            } else {
-                                $stmt = $conn->prepare("SELECT P.product_name, P.producer, SUM(S.product_number) AS total_units_sold
+                            $stmt = $conn->prepare("SELECT P.product_name, P.producer, SUM(S.product_number) AS total_units_sold
                                 FROM Product P
                                 JOIN Store_Product SP ON P.id_product = SP.id_product
                                 JOIN Sale S ON SP.UPC = S.UPC
@@ -369,26 +341,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 WHERE B.print_date >= :date_from_param AND B.print_date <= :date_to_param
                                 GROUP BY P.product_name, P.producer
                                 ORDER BY total_units_sold DESC LIMIT 5");
+
+
+
+                            $stmt->bindParam(':date_from_param', $date_from);
+                            $stmt->bindParam(':date_to_param', $date_to);
+                            $stmt->execute();
+
+                            $top_popular = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            
+                            echo '<ol>';
+                            foreach ($top_popular as $item) {
+                                echo "<li><h3><span>" . $item['product_name'] . " by " . $item['producer'] . ":</span><span class='value'>" . $item['total_units_sold'] . " items sold</span></h3></li>";
                             }
-                                
-
-                                $stmt->bindParam(':date_from_param', $date_from);
-                                $stmt->bindParam(':date_to_param', $date_to);
-                                $stmt->execute();
-
-                                $top_popular = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                                //var_dump($top_popular);
-                                echo '<ol>';
-                                foreach ($top_popular as $item) {
-                                    echo "<li><h3><span>".$item['product_name']." by ".$item['producer'].":</span><span class='value'>".$item['total_units_sold']." items sold</span></h3></li>";
-                                }
-                                echo '</ol>'
+                            echo '</ol>'
                                 ?>
 
 
                         </div>
                     </div>
-                    
+                    <div>
+                        <div class="totals-header">
+                            <h2>Top 4 most frequent customers</h2>
+                        </div>
+
+                        <div class="totals-container">
+                            <?php
+
+                            $stmt = $conn->prepare("SELECT CONCAT(CC.cust_surname, ' ', CC.cust_name) AS customer, CC.card_number, COUNT(DISTINCT B.bill_number) AS visit_count, (SELECT CONCAT(E.empl_surname, ' ', E.empl_name) FROM Employee E WHERE E.id_employee = (SELECT B2.id_employee_bill FROM Bill B2 WHERE B2.card_number = CC.card_number GROUP BY B2.id_employee_bill ORDER BY COUNT(B2.bill_number) DESC LIMIT 1)) AS most_frequent_employee FROM Customer_Card CC JOIN Bill B ON CC.card_number = B.card_number WHERE B.print_date >= :date_from_param AND B.print_date <= :date_to_param GROUP BY CC.cust_surname, CC.cust_name, CC.card_number ORDER BY visit_count DESC LIMIT 4");
+                            $stmt->bindParam(':date_from_param', $date_from);
+                            $stmt->bindParam(':date_to_param', $date_to);
+                            $stmt->execute();
+
+                            $top_customers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            
+                            echo '<ol>';
+                            foreach ($top_customers as $cust) {
+                                echo "<li><h3><span>" . $cust['customer'] . "<br><small>mostly served by " . $cust['most_frequent_employee'] . "</small></span><span class='value'>" . $cust['visit_count'] . " visits</span></h3></li>";
+                            }
+                            echo '</ol>'
+                                ?>
+
+
+                        </div>
+                    </div>
                 </div>
 
             </details>
