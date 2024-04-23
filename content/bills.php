@@ -367,7 +367,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                                 $top_customers = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             } catch (PDOException $e) {
-                                echo "<div class='banner alert-danger'>Error: " . $e->getMessage() . "</div>";
+                                echo "<div class='banner alert-danger'>There was an error executing the query</div>";
                                 
                             }
                             if ($top_customers): ?>
