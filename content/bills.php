@@ -73,7 +73,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php endif; ?>
             <label for="date-filter" class="date-filter">
                 <span>Printed from</span>
-
                 <input type="date" name="date-from" id="date-filter"
                     value="<?= isset($filters['date-from']) ? $filters['date-from'] : "2020-01-01" ?>">
                 <span>to</span>
@@ -85,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php
     $sort = $filters['sort'] ? $filters['sort'] : 'print_date';
     $date_from = $filters['date-from'] ? date('Y-m-d', strtotime($filters['date-from'])) : date('Y-m-d', strtotime('2020-01-01'));
-    $date_to = $filters['date-from'] ? date('Y-m-d', strtotime($filters['date-to'])) : date('Y-m-d');
+    $date_to = $filters['date-to'] ? date('Y-m-d', strtotime($filters['date-to'])) : date('Y-m-d');
 
     $date_from_filter = $filters['date-from'] ? "WHERE print_date >= '" . $date_from . "'" : '';
     $date_to_filter = $filters['date-to'] ? ($date_from_filter ? "AND" : "WHERE") . " print_date <= '" . date('Y-m-d', strtotime($date_to . ' +1 day')) . "'" : '';
