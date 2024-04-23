@@ -1,26 +1,18 @@
 <?php
 include_once 'functions.php';
-// unset($_SESSION['filtersData']);
-
+//unset($_SESSION['filtersData']);
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Storing filters data in the session, so that it wasn't reset after submission of other forms
-
+    //storing filters data in the session, so that it wasn't reset after submission of other forms
     $currentPage = basename($_SERVER['SCRIPT_NAME']);
 
     if ($_REQUEST["form"] == "totals") {
         $_SESSION['filtersData'][$currentPage]["id_product"] = $_POST["id_product"];
-        $_SESSION['filtersData'][$currentPage]["card_number"] = $_POST["card_number"];
         header("Location: " . $_SERVER['HTTP_REFERER']);
     } else {
         $_POST["id_product"] = $_SESSION['filtersData'][$currentPage]["id_product"];
-        $_POST["card_number"] = $_SESSION['filtersData'][$currentPage]["card_number"];
         $_SESSION['filtersData'][$currentPage] = $_POST;
-
     }
-
-
 }
-
 
 ?>
 <?php include 'components/header.php'; ?>
@@ -315,7 +307,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $stmt->execute();
 
                             $top_profit = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                            
+
                             echo '<ol>';
                             foreach ($top_profit as $item) {
                                 echo "<li><h3><span>" . $item['product_name'] . " by " . $item['producer'] . ":</span><span class='value'><span class='decimal'>" . $item['total_profit'] . "</span> UAH</span></h3></li>";
@@ -349,7 +341,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $stmt->execute();
 
                             $top_popular = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                            
+
                             echo '<ol>';
                             foreach ($top_popular as $item) {
                                 echo "<li><h3><span>" . $item['product_name'] . " by " . $item['producer'] . ":</span><span class='value'>" . $item['total_units_sold'] . " items sold</span></h3></li>";
@@ -367,22 +359,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                         <div class="totals-container">
                             <?php
+                            try {
+                                $stmt = $conn->prepare("SELECT CONCAT(CC.cust_surname, ' ', CC.cust_name) AS customer, CC.card_number, COUNT(B.bill_number) AS visit_count, (SELECT CONCAT(E.empl_surname, ' ', E.empl_name) FROM Employee E WHERE E.id_employee = (SELECT B2.id_employee_bill FROM Bill B2 WHERE B2.card_number = CC.card_number GROUP BY B2.id_employee_bill ORDER BY COUNT(B2.bill_number) DESC LIMIT 1)) AS most_frequent_employee FROM Customer_Card CC INNER JOIN Bill B ON CC.card_number = B.card_number WHERE B.print_date >= :date_from_param AND B.print_date <= :date_to_param GROUP BY CC.cust_surname, CC.cust_name, CC.card_number ORDER BY visit_count DESC, customer ASC LIMIT 4");
+                                $stmt->bindParam(':date_from_param', $date_from);
+                                $stmt->bindParam(':date_to_param', $date_to);
+                                $stmt->execute();
 
-                            $stmt = $conn->prepare("SELECT CONCAT(CC.cust_surname, ' ', CC.cust_name) AS customer, CC.card_number, COUNT(B.bill_number) AS visit_count, (SELECT CONCAT(E.empl_surname, ' ', E.empl_name) FROM Employee E WHERE E.id_employee = (SELECT B2.id_employee_bill FROM Bill B2 WHERE B2.card_number = CC.card_number GROUP BY B2.id_employee_bill ORDER BY COUNT(B2.bill_number) DESC LIMIT 1)) AS most_frequent_employee FROM Customer_Card CC INNER JOIN Bill B ON CC.card_number = B.card_number WHERE B.print_date >= :date_from_param AND B.print_date <= :date_to_param GROUP BY CC.cust_surname, CC.cust_name, CC.card_number ORDER BY visit_count DESC, customer ASC LIMIT 4");
-                            $stmt->bindParam(':date_from_param', $date_from);
-                            $stmt->bindParam(':date_to_param', $date_to);
-                            $stmt->execute();
-
-                            $top_customers = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                            
-                            echo '<ol>';
-                            foreach ($top_customers as $cust) {
-                                echo "<li><h3><span>" . $cust['customer'] . "<br><small>mostly served by " . $cust['most_frequent_employee'] . "</small></span><span class='value'>" . $cust['visit_count'] . " visits</span></h3></li>";
+                                $top_customers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            } catch (PDOException $e) {
+                                echo "<div class='banner alert-danger'>Error: " . $e->getMessage() . "</div>";
+                                
                             }
-                            echo '</ol>'
-                                ?>
-
-
+                            if ($top_customers): ?>
+                            <ol>
+                                <?php foreach ($top_customers as $cust): ?>
+                                    <li>
+                                        <h3>
+                                            <span><?= $cust['customer'] ?>
+                                                <br>
+                                                <small>mostly served by <?= $cust['most_frequent_employee'] ?></small>
+                                            </span>
+                                            <span class='value'><?= $cust['visit_count'] ?> visits</span>
+                                        </h3>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ol>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
