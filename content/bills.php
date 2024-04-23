@@ -368,7 +368,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="totals-container">
                             <?php
 
-                            $stmt = $conn->prepare("SELECT CONCAT(CC.cust_surname, ' ', CC.cust_name) AS customer, CC.card_number, COUNT(DISTINCT B.bill_number) AS visit_count, (SELECT CONCAT(E.empl_surname, ' ', E.empl_name) FROM Employee E WHERE E.id_employee = (SELECT B2.id_employee_bill FROM Bill B2 WHERE B2.card_number = CC.card_number GROUP BY B2.id_employee_bill ORDER BY COUNT(B2.bill_number) DESC LIMIT 1)) AS most_frequent_employee FROM Customer_Card CC JOIN Bill B ON CC.card_number = B.card_number WHERE B.print_date >= :date_from_param AND B.print_date <= :date_to_param GROUP BY CC.cust_surname, CC.cust_name, CC.card_number ORDER BY visit_count DESC LIMIT 4");
+                            $stmt = $conn->prepare("SELECT CONCAT(CC.cust_surname, ' ', CC.cust_name) AS customer, CC.card_number, COUNT(B.bill_number) AS visit_count, (SELECT CONCAT(E.empl_surname, ' ', E.empl_name) FROM Employee E WHERE E.id_employee = (SELECT B2.id_employee_bill FROM Bill B2 WHERE B2.card_number = CC.card_number GROUP BY B2.id_employee_bill ORDER BY COUNT(B2.bill_number) DESC LIMIT 1)) AS most_frequent_employee FROM Customer_Card CC INNER JOIN Bill B ON CC.card_number = B.card_number WHERE B.print_date >= :date_from_param AND B.print_date <= :date_to_param GROUP BY CC.cust_surname, CC.cust_name, CC.card_number ORDER BY visit_count DESC, customer ASC LIMIT 4");
                             $stmt->bindParam(':date_from_param', $date_from);
                             $stmt->bindParam(':date_to_param', $date_to);
                             $stmt->execute();
