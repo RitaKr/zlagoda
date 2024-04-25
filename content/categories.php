@@ -27,7 +27,7 @@ $filters = isset ($_SESSION['filtersData'][$currentPage]) ? $_SESSION['filtersDa
                             Categories, with all of their products in store
                      </option>
                      <option value="all_in_store_promo" <?= isset ($filters['cat_filter']) && $filters['cat_filter'] == "all_in_store_promo" ? "selected" : ""?>>
-                            Categories, with all of their store products having non-promotional items
+                            Categories, with all of their store products having promotional items
                      </option>
                 </select>
             </label>
